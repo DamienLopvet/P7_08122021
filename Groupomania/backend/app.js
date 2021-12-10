@@ -13,10 +13,10 @@ require("dotenv").config();
 
 //create connection to mysql
 const db = mysql.createConnection({
-  host: "localhost",
-  user: "root",
-  password: "",
-  database: "foodly",
+  host: "mysql-etwincorp.alwaysdata.net",
+  user: "etwincorp",
+  password: "465497Dl.",
+  database: "etwincorp_groupomania",
 });
 
 //connection to mysql
@@ -27,8 +27,8 @@ db.connect((err) => {
   console.log("mySQL Connected");
 });
 
-app.get("/foodly", (req, res) => {
-  let sql = "USE foodly";
+app.get("/test", (req, res) => {
+  let sql = "CREATE TABLE test(colonne_test INT NOT NULL) ";
   db.query(sql, (err) => {
     if (err) {
       throw err;
