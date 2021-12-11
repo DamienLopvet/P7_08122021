@@ -1,3 +1,6 @@
+//import environment variables module
+require("dotenv").config();
+
 const express = require("express");
 const app = express();
 const mysql = require("mysql");
@@ -8,16 +11,19 @@ const path = require("path");
 //import http header security config
 const helmet = require("helmet");
 
-//import environment variables module
-require("dotenv").config();
+
 
 //create connection to mysql
 const db = mysql.createConnection({
-  host: "mysql-etwincorp.alwaysdata.net",
-  user: "etwincorp",
-  password: "465497Dl.",
-  database: "etwincorp_groupomania",
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_USER_PASSWORD,
+  database: process.env.DB_NAME,
 });
+
+const messageRoutes = require('./routes/message.js')
+const comentRoutes = require('./routes/coment')
+const userRoutes = require('./routes/user') 
 
 //connection to mysql
 db.connect((err) => {
@@ -28,7 +34,7 @@ db.connect((err) => {
 });
 
 app.get("/test", (req, res) => {
-  let sql = "CREATE TABLE test(colonne_test INT NOT NULL) ";
+  let sql = "CREATE TABLE testENV1(colonne_test INT NOT NULL) ";
   db.query(sql, (err) => {
     if (err) {
       throw err;
@@ -48,8 +54,7 @@ app.get("/foodly/users", (req, res) => {
   });
 });
 
-//static use of image datas
-app.use("/images", express.static(path.join(__dirname, "images")));
+
 
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
@@ -63,12 +68,21 @@ app.use((req, res, next) => {
   );
   next();
 });
-//    app.use('api/', XXXroutes);
+
+
+//settings headers security config
+app.use(helmet());
 
 //parse request into json
 app.use(express.json());
 
-//settings headers security config
-app.use(helmet());
+
+//static use of image datas
+app.use("/images", express.static(path.join(__dirname, "images")));
+
+//set up  with frontend root 
+app.use("/api/messages", messageRoutes);
+app.use("/api/coment", comentRoutes);
+app.use("/api/auth", userRoutes);
 
 module.exports = app;
