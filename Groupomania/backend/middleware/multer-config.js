@@ -4,13 +4,17 @@ const multer = require('multer');
 const MIME_TYPES = {
   'image/jpg': 'jpg',
   'image/jpeg': 'jpg',
-  'image/png': 'png'
+  'image/png': 'png',
+  'Gif/gif': 'gif',
+  'Gif/gif': 'GIF',
+  'video/mp4':'mp4',
+
 };
 
 //create and config the storage path
 const storage = multer.diskStorage({
-  destination: (req, file, callback) => {
-    callback(null, 'images');
+    destination: (req, file, callback) => {
+    callback(null, 'attachments');
   },
 
   //config filename
@@ -21,4 +25,8 @@ const storage = multer.diskStorage({
   }
 });
 
-module.exports = multer({storage: storage}).single('image');
+//set files size limit to 30 mb
+
+module.exports = multer({storage: storage, limits: {
+  fileSize: 30000000 // 10000000 Bytes = 10 MB
+  }}).single('attachment');

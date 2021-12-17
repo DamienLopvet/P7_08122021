@@ -1,5 +1,10 @@
 const express = require("express");
 
+//import multer
+const multer = require("../middleware/multer-config");
+
+const auth = require("../middleware/auth");
+
 //create router
 const router = express.Router();
 
@@ -11,14 +16,13 @@ const password = require("../middleware/password");
 
 //import request limiter
 const limiter = require("../middleware/limiter")
-    
-//set up module each route need to pass through
-router.post("/signup", password, userCtrl.signup);
-router.post("/login", limiter.loginLimiter, userCtrl.login);
-router.post("/logout", limiter.apiLimiter, userCtrl.logout);
-router.put("/userId", limiter.apiLimiter, userCtrl.modifyUser);
-router.get("/userId", limiter.apiLimiter, userCtrl.getUser);
-router.delete("/userId", limiter.apiLimiter, userCtrl.deleteUser);
 
+//set up module each route need to pass through
+router.post("/signup", password, limiter.userLogLimiter, userCtrl.signup);
+router.post("/signin", limiter.userLogLimiter, userCtrl.signin);
+router.post("/signout", auth, userCtrl.signout);
+//router.put("/userModify", auth, userCtrl.modifyUser);
+router.get("/userProfile", auth, userCtrl.getProfile);
+router.delete("/userDelete", auth, userCtrl.deleteProfile);
 
 module.exports = router;

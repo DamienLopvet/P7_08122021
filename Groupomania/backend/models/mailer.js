@@ -17,22 +17,24 @@ transporter = nodemailer.createTransport({
 //    text:`Bonjour ${req.body.prenom},<br/> Pour finaliser la création de votre compte Groupomania Social-Network, validez votre adresse email en cliquant sur ce lien :<br/> <a href= "http://localhost:3000/api/auth/login?token= ${jswtoken.verifyEmail}"/>.
 //    `
 //}
-exports.apiOverRequested = {
+apiOverRequested = {
   from: process.env.EMAILSENDER, // sender address
   to: process.env.EMAILRECEIVER, // list of receivers
   subject: "there are two many request beeing sended on your website",
   text: "50 request have been made in one quarter of an hour, it's weird, you will have to check your logs to findout what happend it seem that you are beeing under attack !! Best regards . Webdeveloper ",
 };
-exports.loginOverRequested = {
+userLogOverRequested = {
   from: process.env.EMAILSENDER, // sender address
   to: process.env.EMAILRECEIVER, // list of receivers
   subject: "there are two many login request beeing sended on your website",
   text: "5 request have been made in one hour, it's weird, you will have to check your logs to findout what happend it seem that you are beeing under attack !! Best regards . Webdeveloper ",
 };
 
-transporter.sendMail({
-  from : process.env.EMAILSENDER,
-  to: "damienlopvet@gmail.com",
-  subject:"test",
-  text:"texte.test"
- } )
+//mail = transporter.sendMail({
+//  from : process.env.EMAILSENDER,
+//  to: "damienlopvet@gmail.com",
+//  subject:"test",
+//  text:"texte.test"
+// } );
+
+ module.exports= {transporter, apiOverRequested, userLogOverRequested}
