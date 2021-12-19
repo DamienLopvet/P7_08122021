@@ -2,7 +2,7 @@ const Comment = require("../models/Comment");
 const User = require("../models/User");
 
 createComment = (req, res, next) => {
-  const commentaire = req.body.comment;
+  const commentaire = req.body.comment.trim();
   const comment = new Comment({
     userId: req.token.userId,
     postId: req.params.postId,
@@ -27,22 +27,18 @@ deleteComment = (req, res, next) => {
         return res.status(400).json({ error: "search error" });
       }
       const bddUserId = user.id;
-      const bddUserAdmin = user.isAdmin;
+      const isAdmin = user.isAdmin;
 
       Comment.findOne({
         attributes: ["id", "userId", "commentaire"],
         where: { id: req.params.commentId },
       })
         .then((comment) => {
-          console.log('tokenId:'+bddUserId);
-          console.log('isAdmin:'+bddUserAdmin);
-          console.log("commentUserId:" + comment.userId);
-          console.log("commentMessage:" + comment.commentaire);
           if (!comment) {
             res.status(400).json({ message: "comment not found!" });
           }
 
-          if (comment.userId == req.token.userId || bddUserAdmin == true) {
+          if (comment.userId == bddUserId || isAdmin == true) {
             comment.destroy({
               where: { id: comment.id },
             });

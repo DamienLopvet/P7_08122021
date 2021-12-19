@@ -4,7 +4,7 @@ const fs = require("fs");
 const { post } = require("../routes/post");
 
 createPost = (req, res, next) => {
-  const message = req.body.post;
+  const message = req.body.message.trim();
   const postObject = req.file
     ? {
         attachmentUrl: `${req.protocol}://${req.get("host")}/attachments/${
@@ -18,8 +18,8 @@ createPost = (req, res, next) => {
     message,
     userId: req.token.userId,
   });
-  if (post.message == null && post.attachmentUrl == null) {
-    res.status(400).json({ message: "post cannot be empty!" });
+  if (!message.length  && post.attachmentUrl == null) {
+    return res.status(400).json({ message: "post cannot be empty!" });
   }
   post
     .save()
@@ -57,7 +57,7 @@ deletePost = (req, res, next) => {
         return res.status(400).json({ error: "search error" });
       }
       const bddUserId = user.id;
-      const bddUserAdmin = user.isAdmin;
+      const isAdmin = user.isAdmin;
 
       Post.findOne({
         attributes: ["id", "userId", "attachmentUrl","message"],
@@ -66,13 +66,11 @@ deletePost = (req, res, next) => {
         },
       })
         .then((post) => {
-          console.log('tokenId:'+bddUserId);
-          console.log('isAdmin:'+ bddUserAdmin);
-          console.log("postUserId:" + post.userId);
+          
           if (!post) {
             return res.status(400).json({ message: "post not found" });
           }
-          if (post.userId == req.token.userId || bddUserAdmin == true) {
+          if (post.userId == bddUserId || isAdmin == true) {
             const filename = post.attachmentUrl.split("/attachments/")[1];
         fs.rm(`attachments/${filename}`,()=>{
             Post.destroy({

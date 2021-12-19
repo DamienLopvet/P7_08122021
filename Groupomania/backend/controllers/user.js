@@ -6,27 +6,44 @@ const cryptoJs = require("crypto-js");
 const fs = require("fs");
 
 signup = (req, res, next) => {
-  //encrypting email
-  emailCrypted = cryptoJs
-    .HmacSHA256(req.body.email, process.env.DCRYPTMAIL)
-    .toString();
+  // check email white-space, validity and encrypting 
+  email = req.body.email.trim();
+  const emailregex =/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  const emailIsvalid = emailregex.test(email);
+  if (emailIsvalid) {
+    emailCrypted = cryptoJs
+      .HmacSHA256(email, process.env.DCRYPTMAIL)
+      .toString();
+  } else {
+    return res.status(400).json({ message: "Invalid email" });
+  }
 
+//check userName white-space and prevent injection
+Name= req.body.userName.trim()
+const userNameregex = /^(?=[a-zA-Z0-9._-]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
+const userNameIsValid = userNameregex.test(Name)
+if(userNameIsValid){
+userName = Name
+}else{
+  return res.status(400).json({ message: "Invalid UserName" })
+}
   //hashing password
   passwordHash = bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-        ...req.body,
+       userName,
         email: emailCrypted,
         //imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
         password: hash,
         isAdmin: false,
       });
-      user.save()
+      user
+        .save()
         .then(() => res.status(201).json({ message: "user created!" }))
         .catch((error) => res.status(400).json({ error }));
     })
-    .catch((error) => res.status(500).json({ error}));
+    .catch((error) => res.status(500).json({ error }));
 };
 
 signin = (req, res, next) => {
@@ -56,9 +73,9 @@ signin = (req, res, next) => {
         .catch((error) => res.status(500).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
-}
+};
 
-signout = (req, res) => {}
+signout = (req, res) => {};
 
 getProfile = (req, res, next) => {
   User.findOne({
@@ -66,10 +83,11 @@ getProfile = (req, res, next) => {
     where: { id: req.token.userId },
   })
     .then((user) => {
-      if(!user){
-        res.status(400).json({error:"search error"})
+      if (!user) {
+        res.status(400).json({ error: "search error" });
       }
-      res.status(200).json(user)})
+      res.status(200).json(user);
+    })
     .catch((error) => res.status(500).json(error));
 };
 
@@ -78,11 +96,12 @@ deleteProfile = (req, res) => {
     where: { id: req.token.userId },
   })
     .then((user) => {
-      if(!user){
-        res.status(400).json({error:"search error"})
+      if (!user) {
+        res.status(400).json({ error: "search error" });
       }
-      res.status(200).json({ message: "user deleted" })})
+      res.status(200).json({ message: "user deleted" });
+    })
     .catch((error) => res.status(500).json(error));
 };
 
-module.exports = {signup, signin, signout, getProfile, deleteProfile };
+module.exports = { signup, signin, signout, getProfile, deleteProfile };
