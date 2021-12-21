@@ -6,37 +6,32 @@ const cryptoJs = require("crypto-js");
 const fs = require("fs");
 
 signup = (req, res, next) => {
-  // check email white-space, validity and encrypting 
+  // check email white-space, validity and encrypting
   email = req.body.email.trim();
-  const emailregex =/^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
-  const emailIsvalid = emailregex.test(email);
-  if (emailIsvalid) {
+  const emailregex =/^(.*)@(.*)$/
+  const emailIsvalid = emailregex.test(email);
+  if (email && emailIsvalid) {
     emailCrypted = cryptoJs
       .HmacSHA256(email, process.env.DCRYPTMAIL)
       .toString();
   } else {
-    return res.status(400).json({ message: "Invalid email" });
+    return res.status(400).json({ message: "A valid email is required" });
   }
 
-//check userName white-space and prevent injection
-Name= req.body.userName.trim()
-const userNameregex = /^(?=[a-zA-Z0-9._-]{4,20}$)(?!.*[_.]{2})[^_.].*[^_.]$/
-const userNameIsValid = userNameregex.test(Name)
-if(userNameIsValid){
-userName = Name
-}else{
-  return res.status(400).json({ message: "Invalid UserName" })
-}
+  //check userName white-space and prevent injection
+  name = req.body.userName.trim();
+  if (name.length > 20) {
+    return res.status(400).json({ message: "UserName must be shorter (max 20 characters)" });
+  }
   //hashing password
   passwordHash = bcrypt
     .hash(req.body.password, 10)
     .then((hash) => {
       const user = new User({
-       userName,
+        userName : name,
         email: emailCrypted,
         //imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
         password: hash,
-        isAdmin: false,
       });
       user
         .save()
@@ -65,7 +60,8 @@ signin = (req, res, next) => {
           }
           res.status(200).json({
             userId: user.id,
-            token: jwt.sign({ userId: user.id }, process.env.TOKEN, {
+            isAdmin: user.isAdmin,
+            token: jwt.sign({ userId: user.id, isAdmin: user.isAdmin }, process.env.TOKEN, {
               expiresIn: "48h",
             }),
           });
@@ -91,6 +87,59 @@ getProfile = (req, res, next) => {
     .catch((error) => res.status(500).json(error));
 };
 
+modifyProfile = (req, res, next)=>{
+User.findOne({
+  where:{
+    id: req.params.userId
+  }
+  
+}).then((user)=>{
+if (!user) {
+        res.status(400).json({ error: "search error" });
+      }
+      if (user.id == req.token.userId || req.token.isAdmin) {
+     
+     //email checking
+      email = req.body.email.trim();
+  const emailregex =/^(.*)@(.*)$/
+  const emailIsvalid = emailregex.test(email);
+  if (email && emailIsvalid) {
+    emailCrypted = cryptoJs
+      .HmacSHA256(email, process.env.DCRYPTMAIL)
+      .toString();
+  } else {
+    return res.status(400).json({ message: "A valid email is required" });
+  }
+
+  //check userName white-space 
+  name = req.body.userName.trim();
+  if (name.length > 20) {
+    return res.status(400).json({ message: "UserName must be shorter (max 20 characters)" });
+  }
+
+  //hashing password
+  passwordToHash = bcrypt
+    .hash(req.body.password, 10).then(hash=>{
+      passwordHash = hash
+    }).catch((error) => res.status(400).json({ error }));;
+
+        user.id = req.token.userId
+        user.userName = name,
+        user.email= emailCrypted,
+        user.password = passwordHash
+        //imageUrl: `${req.protocol}://${req.get("host")}/images/${req.file.filename}`,
+      
+      user
+        .save()
+        .then(() => res.status(201).json({ message: "user created!" }))
+        .catch((error) => res.status(400).json({ error }));
+}
+
+}).catch((error) => res.status(400).json({ error }));
+}
+
+
+
 deleteProfile = (req, res) => {
   User.destroy({
     where: { id: req.token.userId },
@@ -104,4 +153,4 @@ deleteProfile = (req, res) => {
     .catch((error) => res.status(500).json(error));
 };
 
-module.exports = { signup, signin, signout, getProfile, deleteProfile };
+module.exports = { signup, signin, signout, getProfile, modifyProfile, deleteProfile };

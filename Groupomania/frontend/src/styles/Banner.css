@@ -1,0 +1,49 @@
+.App-header{
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-between;
+    border-bottom: 1px solid black;
+}
+.App-logo{
+    width: 40px;
+    height: 40px;
+    padding : 20px;
+  -webkit-animation: flip-vertical-right 15s cubic-bezier(0.455, 0.030, 0.515, 0.955) infinite ;
+   animation: flip-vertical-right 15s cubic-bezier(0.455, 0.030, 0.515, 0.955) infinite ;
+        
+}
+.nav{
+    align-self: center;
+    
+}
+.App-link{
+    padding-right: 20px
+}
+@-webkit-keyframes flip-vertical-right {
+    0% {
+      -webkit-transform: rotateY(0);
+              transform: rotateY(0);
+    }
+    50% {
+      -webkit-transform: rotateY(180deg);
+              transform: rotateY(180deg);
+    }
+    100% {-webkit-transform: rotateY(0);
+              transform: rotateY(0);
+        
+    }
+  }
+  @keyframes flip-vertical-right {
+    0% {
+      -webkit-transform: rotateY(0);
+              transform: rotateY(0);
+    }
+    50% {
+      -webkit-transform: rotateY(180deg);
+              transform: rotateY(180deg);
+    }
+    100% {-webkit-transform: rotateY(0);
+              transform: rotateY(0);
+        
+    }
+  }

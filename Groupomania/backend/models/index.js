@@ -3,14 +3,18 @@ const Post = require("./Post");
 const Comment = require("./Comment");
 
 const loadModel = () => {
-  User.hasMany(Post, {
+  Post.belongsTo(User, {
     foreignKey: "userId",
     onDelete: "cascade",
   });
+  Comment.belongsTo(User, {
+    foreignKey: "userId",
+    
+  })
   Post.hasMany(Comment,{
     foreignKey:"postId",
     onDelete:"cascade",
-  });
+    });
   User.sync();
   Post.sync();
   Comment.sync();
