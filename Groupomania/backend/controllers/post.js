@@ -56,7 +56,6 @@ modifyPost = (req, res, next) => {
         post.id = req.params.messageId;
         post.message = message;
         post.userId = req.token.userId;
-        console.log('post')
         
         if (req.file) {
     post.attachmentUrl = `${req.protocol}://${req.get("host")}/attachments/${
