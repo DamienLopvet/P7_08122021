@@ -9,12 +9,14 @@ const loadModel = () => {
   });
   Comment.belongsTo(User, {
     foreignKey: "userId",
+    onDelete: "cascade"
     
   })
   Post.hasMany(Comment,{
     foreignKey:"postId",
     onDelete:"cascade",
     });
+    
   User.sync();
   Post.sync();
   Comment.sync();

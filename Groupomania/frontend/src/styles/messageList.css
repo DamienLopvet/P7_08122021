@@ -1,8 +1,15 @@
 .messageList{
-    list-style: none
-}
+    list-style: none;
+    margin: 0 ;
+    padding: 0 20px}
+.messageList_card{
+    box-shadow :0 2px 1px -1px #D1515A, 0 2px 1px -1px #091F43;
+    display: block;
+    padding: 20px 0;
 
-.messageList_image{
+
+}
+.messageList_attachment{
     background-color: lightgrey;
     max-width: 300px;
     border-radius: 20px;

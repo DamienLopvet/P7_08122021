@@ -1,5 +1,4 @@
 const Comment = require("../models/Comment");
-const User = require("../models/User");
 
 createComment = (req, res, next) => {
   const commentaire = req.body.comment.trim();

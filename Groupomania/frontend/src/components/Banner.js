@@ -3,12 +3,14 @@ import '../styles/Banner.css'
 
 function Banner() {
   return <div className="Banner">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo Groupomania" />
+      <header className="header">
+        <div className="header_brand">
+        <img src={logo} className="header_logo" alt="logo Groupomania" />
         <h1>Groupomania</h1>
-        <div className="nav">
+        </div>
+        <div className="header_nav">
         <a
-          className="App-link"
+          className="header_nav_link"
           href=""
           target="_blank"
           rel="noopener noreferrer"
@@ -16,7 +18,7 @@ function Banner() {
           Se connecter
         </a>
         <a
-          className="App-link"
+          className="header_nav_link"
           href="Signup.js"
           target="_blank"
           rel="noopener noreferrer"

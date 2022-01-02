@@ -86,14 +86,21 @@ deletePost = (req, res, next) => {
         return res.status(400).json({ message: "post not found" });
       }
       if (post.userId == req.token.userId || req.token.isAdmin) {
-        const filename = post.attachmentUrl.split("/attachments/")[1];
+        if(post.attachmentUrl)
+        {const filename = post.attachmentUrl.split("/attachments/")[1];
         fs.rm(`attachments/${filename}`, () => {
           Post.destroy({
             where: { id: post.id },
           })
             .then(() => res.status(200).json({ message: "post deleted" }))
             .catch((error) => res.status(400).json({ error }));
-        });
+        });}else{
+          Post.destroy({
+            where: { id: post.id },
+          })
+            .then(() => res.status(200).json({ message: "post deleted" }))
+            .catch((error) => res.status(400).json({ error }));
+        }
       } else {
         return res.status(401).json({ error: "unauthorized" });
       }

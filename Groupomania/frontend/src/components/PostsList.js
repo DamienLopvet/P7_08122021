@@ -2,6 +2,7 @@ import { useEffect, useState } from "react"
 import '../styles/messageList.css'
 
 
+
 function PostsList(){
     const [data, setData] = useState([]);
     useEffect(()=>{
@@ -20,22 +21,36 @@ function PostsList(){
 
     fetchPostData();
 
-},[])
+},[]);
+
+
 
 return (
-<div>
-    {data.map((e)=>(
-<ul className="messageList">
-    <li className="messageList_card">
-        <p className="messagList_date">{e.createdAt}</p>
-        <p className="messagList_userName">{e.user.userName}</p>
-         <p className="messageList_userName">{e.message}</p>
-         <p className="messageList_comment">{}</p>
+<div><ul className="messageList">
 
-        <img className="messageList_image" src={e.attachmentUrl}/>
+    {data.map((e)=>(
+    <li className="messageList_card">
+        
+        <p className="messagList_date">{e.createdAt}</p>
+        
+        <p className="messagList_userName">{e.user.userName}</p>
+        {e.attachmentUrl ? (e.attachmentUrl.split(".", 3)[2] === "mp4" ? (
+       <div><video controls autoPlay muted className="messageList_attachment">
+       <source src={e.attachmentUrl} type="video/mp4"></source>
+     </video></div>
+   ) : (
+       <div> <img src={e.attachmentUrl} alt="heye" className="messageList_attachment"></img></div>
+   )):("")}
+         <p className="messageList_userName">{e.message}</p>
+         <p className="messageList_comment">   {e.comments ? (<span>{e.comments.map((a)=>(<ul>
+             <div>{a.commentaire} </div>
+         </ul>))} </span>):(<span>no comment</span>)}
+</p>
+       
+        
     </li>
-</ul>))}
-</div>
+))}
+</ul></div>
     )
 
 }

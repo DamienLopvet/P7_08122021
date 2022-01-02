@@ -22,7 +22,7 @@ router.post("/signup", password, limiter.userLogLimiter, userCtrl.signup);
 router.post("/signin", limiter.userLogLimiter, userCtrl.signin);
 router.post("/signout", auth, userCtrl.signout);
 router.put("/:userId/userModify", auth, userCtrl.modifyProfile);
-router.get("/userProfile", auth, userCtrl.getProfile);
-router.delete("/userDelete", auth, userCtrl.deleteProfile);
+router.get("/:userId", auth, userCtrl.getProfile);
+router.delete("/:userId", auth, userCtrl.deleteProfile);
 
 module.exports = router;
