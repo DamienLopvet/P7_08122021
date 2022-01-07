@@ -1,27 +1,47 @@
-import { useEffect, useState } from "react"
 import '../styles/messageList.css'
-
-
+import React, { useState } from "react";
+import axios from "axios"
 
 function PostsList(){
-    const [data, setData] = useState([]);
-    useEffect(()=>{
-        const postUrl ="http://localhost:3030/api/messages";
-        const fetchPostData = async () => {
-            try {   
-                const reponse= await fetch(postUrl);
-                const json = await reponse.json();
-                setData(json);
+const [data, setData] = useState([]);
 
-            } catch (error){
-                console.log("error", error)
-            }
-        }
-    
+axios({
+    method:'get',
+    url: `${process.env.REACT_APP_API_URL}api/messages`,
+    withCredentials:false,
+    data:{
+          }
+  }).then((res)=>{
+    if(res.data.error){
+      
+    }
+    else{
+      console.log('get message réussit')
+     
+    }
+  }).catch((err)=>{
+    console.log(err)
+  })
 
-    fetchPostData();
-
-},[]);
+//function PostsList(){
+//    const [data, setData] = useState([]);
+//    useEffect(()=>{
+//        const postUrl ="http://localhost:3030/api/messages";
+//        const fetchPostData = async () => {
+//            try {   
+//                const reponse= await fetch(postUrl);
+//                const json = await reponse.json();
+//                setData(json);
+//
+//            } catch (error){
+//                console.log("error", error)
+//            }
+//        }
+//    
+//
+//    fetchPostData();
+//
+//},[]);
 
 
 

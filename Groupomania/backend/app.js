@@ -2,6 +2,7 @@
 require('dotenv').config
 const {connexion} = require('./models/connexion')
 const {loadModel} = require('./models/index')
+const cors = require('cors')
 
 
 const express = require("express");
@@ -21,6 +22,7 @@ const commentRoutes = require("./routes/comment");
 
 connexion();
 loadModel();
+app.use(cors());
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader(
