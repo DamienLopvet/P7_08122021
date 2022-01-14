@@ -1,0 +1,45 @@
+.sendPost {
+  background-color: #e8a8ad;
+  margin: 20px 0 0 0;
+  padding: 10px;
+}
+.sendPost_form {
+  
+}
+.sendPost_message_label {
+
+}
+.sendPost_message {
+  width: 87%;
+  height: 15px;
+  border-radius: 15px;
+  border: none;
+  padding: 10px 30px 10px 10px;
+  resize: none;
+}
+.sendPost_message_icon {
+  width: 30px;
+  height: 24px;
+  vertical-align:super;
+}
+.sendPost_attachment_label{
+  position:relative
+}
+.sendPost_attachment_icon {
+  position: absolute;
+  width: 20px;
+  height: 18px;
+  right:10px;
+  bottom: 10px;
+}
+.sendPost_attachment {
+  position: absolute;
+  width: 19px;
+  height: 20px;
+  right:10px;
+  bottom: 10px;
+  display: none;
+}
+.sendPost_button {
+  display: none;
+}

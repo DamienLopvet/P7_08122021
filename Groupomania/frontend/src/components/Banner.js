@@ -1,34 +1,82 @@
 import { useState } from "react";
 import logo from "../assets/logo.png";
-import '../styles/Banner.css'
+import "../styles/Banner.css";
+import { useContext } from "react";
+import { UserContext } from "./UserContext";
+import MyProfile from "./MyProfile";
+import Search from "./Search";
 
-function Nav(){
-  const [isLogged, setIsLogged] = useState(false)
+function Nav() {
+  const user = useContext(UserContext);
+  const [viewProfile, setViewProfile]= useState(false)
 
-  return isLogged ? (<div className="header_nav">
-  <a
-    className="header_nav_link"
-    href=""
-    target="_blank"
-    rel="noopener noreferrer"
-  >
-    Mon profil
-  </a>
-  
-  </div>) : ('')
+  function Signout(e)
+{  
+  e.preventDefault( )
+  user.token=""
+  user.isLogged=false
+
 }
 
+function handleClick(e){
+  e.preventDefault() 
+  if(e.target.id ==="voirMonProfile"){
+ setViewProfile(true)
+}
+ if(e.target.id ==="cacherMonProfile"){
+  setViewProfile(false)
+
+}
+ 
+  }
+  return user.isLogged ? (
+    <div className="header_nav">{viewProfile === false && 
+      <a
+        className="header_nav_link"
+        href=""
+        onClick={handleClick}
+        rel="noopener noreferrer"
+        id="voirMonProfile"
+      >
+        Mon profil
+      </a>}
+      {viewProfile && 
+      <a
+        className="header_nav_link"
+        href=""
+        onClick={handleClick}
+        rel="noopener noreferrer"
+        id="cacherMonProfile"
+      >
+        Mon profil
+      </a>}
+      <a className="header_nav_link" href="" target="" id="signout" onClick={Signout}>
+        Signout
+      </a>
+      {viewProfile && <MyProfile />}
+      
+    </div>
+  ) : (
+    ""
+  );
+}
+
+
+
 function Banner() {
-  return <div className="Banner">
+  return (
+    <div className="banner">
       <header className="header">
         <div className="header_brand">
-        <img src={logo} className="header_logo" alt="logo Groupomania" />
-        <h1>Groupomania</h1>
+          <img src={logo} className="header_logo" alt="logo Groupomania" />
+          <h1>Groupomania</h1>
         </div>
         <Nav />
-      </header>
-    </div>;
+      </header> 
+      <Search />
 
+    </div>
+  );
 }
 
 export default Banner;

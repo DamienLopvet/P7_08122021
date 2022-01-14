@@ -1,11 +1,18 @@
 import '../styles/messageList.css'
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import axios from "axios"
+import { UserContext } from './UserContext';
 
 function PostsList(){
+ 
 const [data, setData] = useState([]);
+const user= useContext(UserContext)
 
-axios({
+useEffect(async ()=>{
+  axios({
+    headers:{
+      "Authorization": "Bearer "+ user.token
+    },
     method:'get',
     url: `${process.env.REACT_APP_API_URL}api/messages`,
     withCredentials:false,
@@ -13,43 +20,22 @@ axios({
           }
   }).then((res)=>{
     if(res.data.error){
-      
+            console.log('get message réussit')
+
     }
     else{
-      console.log('get message réussit')
-     
+      console.log(res.data)
+      setData(res.data)
     }
   }).catch((err)=>{
     console.log(err)
-  })
+  })},[])
 
-//function PostsList(){
-//    const [data, setData] = useState([]);
-//    useEffect(()=>{
-//        const postUrl ="http://localhost:3030/api/messages";
-//        const fetchPostData = async () => {
-//            try {   
-//                const reponse= await fetch(postUrl);
-//                const json = await reponse.json();
-//                setData(json);
-//
-//            } catch (error){
-//                console.log("error", error)
-//            }
-//        }
-//    
-//
-//    fetchPostData();
-//
-//},[]);
-
-
-
-return (
+return user.isLogged?(
 <div><ul className="messageList">
 
     {data.map((e)=>(
-    <li className="messageList_card">
+    <li key={e.id} className="messageList_card">
         
         <p className="messagList_date">{e.createdAt}</p>
         
@@ -59,19 +45,19 @@ return (
        <source src={e.attachmentUrl} type="video/mp4"></source>
      </video></div>
    ) : (
-       <div> <img src={e.attachmentUrl} alt="heye" className="messageList_attachment"></img></div>
+       <div> <img src={e.attachmentUrl} alt="post" className="messageList_attachment"></img></div>
    )):("")}
          <p className="messageList_userName">{e.message}</p>
-         <p className="messageList_comment">   {e.comments ? (<span>{e.comments.map((a)=>(<ul>
-             <div>{a.commentaire} </div>
-         </ul>))} </span>):(<span>no comment</span>)}
-</p>
+         <div className="messageList_comment">   {e.comments ? (<ul>{e.comments.map((a)=>(<li key={e.comment}>
+             <div>{e.commentaire} </div>
+         </li>))} </ul>):(<span>no comment</span>)}
+</div>
        
         
     </li>
 ))}
 </ul></div>
-    )
+    ):('')
 
 }
 

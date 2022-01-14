@@ -12,6 +12,7 @@ createPost = (req, res, next) => {
     post.attachmentUrl = `${req.protocol}://${req.get("host")}/attachments/${
       req.file.filename
     }`;
+
   }
   if (!message.length && !post.attachmentUrl) {
     return res.status(400).json({ message: "post cannot be empty!" });
@@ -24,7 +25,7 @@ createPost = (req, res, next) => {
 
 getAllPosts = (req, res, next) => {
   Post.findAll({
-    attributes: ["userId", "message", "attachmentUrl", "createdAt"],
+    attributes: ["id", "userId", "message", "attachmentUrl", "createdAt"],
     include: [User, { model: Comment, include: User }],
   })
     .then((post) => res.status(200).json(post))
@@ -32,11 +33,24 @@ getAllPosts = (req, res, next) => {
 };
 
 getUserPosts = (req, res, next) => {
-  Post.findAll({
-    attributes: ["userId", "message", "attachmentUrl", "createdAt"],
-    where: { userId: req.params.userId },
+  User.findOne({
+    where: { userName: req.params.userName },
   })
-    .then((post) => res.status(200).json(post))
+    .then((user) => {
+      if (user) {
+        userFoundedId = user.id;
+      } else {
+        return res.status(400).json({ message: "user not found" });
+      }
+    })
+    .then(() => {
+      Post.findAll({
+        attributes: ["userId", "message", "attachmentUrl", "createdAt"],
+        where: { userId: userFoundedId },
+      })
+        .then((post) => res.status(200).json(post))
+        
+    })
     .catch((error) => res.status(500).json(error));
 };
 
@@ -46,8 +60,7 @@ modifyPost = (req, res, next) => {
       id: req.params.messageId,
     },
   })
-    .then((post) => { 
-
+    .then((post) => {
       if (!post) {
         return res.status(400).json({ message: "post not found" });
       }
@@ -56,12 +69,12 @@ modifyPost = (req, res, next) => {
         post.id = req.params.messageId;
         post.message = message;
         post.userId = req.token.userId;
-        
+
         if (req.file) {
-    post.attachmentUrl = `${req.protocol}://${req.get("host")}/attachments/${
-      req.file.filename
-    }`;
-  }
+          post.attachmentUrl = `${req.protocol}://${req.get(
+            "host"
+          )}/attachments/${req.file.filename}`;
+        }
 
         if (!message.length && !post.attachmentUrl) {
           return res.status(400).json({ message: "post cannot be empty!" });
@@ -86,15 +99,16 @@ deletePost = (req, res, next) => {
         return res.status(400).json({ message: "post not found" });
       }
       if (post.userId == req.token.userId || req.token.isAdmin) {
-        if(post.attachmentUrl)
-        {const filename = post.attachmentUrl.split("/attachments/")[1];
-        fs.rm(`attachments/${filename}`, () => {
-          Post.destroy({
-            where: { id: post.id },
-          })
-            .then(() => res.status(200).json({ message: "post deleted" }))
-            .catch((error) => res.status(400).json({ error }));
-        });}else{
+        if (post.attachmentUrl) {
+          const filename = post.attachmentUrl.split("/attachments/")[1];
+          fs.rm(`attachments/${filename}`, () => {
+            Post.destroy({
+              where: { id: post.id },
+            })
+              .then(() => res.status(200).json({ message: "post deleted" }))
+              .catch((error) => res.status(400).json({ error }));
+          });
+        } else {
           Post.destroy({
             where: { id: post.id },
           })

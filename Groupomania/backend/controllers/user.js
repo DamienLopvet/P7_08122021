@@ -36,7 +36,18 @@ signup = (req, res, next) => {
       });
       user
         .save()
-        .then(() => res.status(201).json({ message: "user created!" }))
+        .then((user) => res.status(201).json({
+          userName: user.userName,
+          userId: user.id,
+          isAdmin: user.isAdmin,
+          token: jwt.sign(
+            { userId: user.id, isAdmin: user.isAdmin },
+            process.env.TOKEN,
+            {
+              expiresIn: "48h",
+            }
+          ),
+        }))
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
@@ -58,6 +69,7 @@ signin = (req, res, next) => {
               .json({ message: `Le mot de passe ne corespond pas.` });
           }
           res.status(200).json({
+            userName: user.userName,
             userId: user.id,
             isAdmin: user.isAdmin,
             token: jwt.sign(
@@ -78,14 +90,19 @@ signout = (req, res) => {};
 
 getProfile = (req, res, next) => {
   User.findOne({
-    where: { id: req.params.userId },
+    where: { userName: req.params.userName },
   })
     .then((user) => {
       if (!user) {
         return res.status(400).json({ error: "search error" });
       }
       if (user.id == req.token.userId || req.token.isAdmin) {
-        return res.status(200).json(user);
+        return res.status(200).json({
+          userName: user.userName,
+          userId: user.id,
+          isAdmin: user.isAdmin,
+          email : user.email,
+        });
       } else {
         return res.status(401).json({ error: "unauthorized" });
       }
@@ -146,7 +163,7 @@ modifyProfile = (req, res, next) => {
         }
         user
           .save()
-          .then(() => res.status(201).json({ message: "user modified!" }))
+          .then(() => res.status(201).json({ user }))
           .catch((error) => res.status(400).json({ error }));
       }
     })
@@ -159,19 +176,17 @@ deleteProfile = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-        res.status(400).json({ error: "search error" });
+       return res.status(400).json({ error: "search error" });
       }
       if (user.id == req.token.userId || req.token.isAdmin) {
         User.destroy({
           where: { id: user.id },
         })
-          .then(() => res.status(200).json({ message: "User deleted" }))
-          .catch((error) => res.status(400).json({ error }));
       } else {
         return res.status(401).json({ error: "unauthorized" });
       }
-    })
-    .catch((error) => res.status(500).json(error));
+    }).then(() => res.status(200).json({ message: "User deleted" }))
+    .catch((error) => res.status(500).json(error))
 };
 
 module.exports = {

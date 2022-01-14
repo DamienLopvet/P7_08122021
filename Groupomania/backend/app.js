@@ -43,7 +43,7 @@ app.use(helmet());
 app.use(express.json());
 
 //static use of image datas
-app.use("/attachments", express.static(path.join(__dirname, "attachments")));
+//app.use("/attachments", express.static(path.join(__dirname, "attachments")));
 
 //set up  with frontend root 
 app.use("/api/messages", postRoutes);
