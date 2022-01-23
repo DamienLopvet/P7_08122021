@@ -8,22 +8,37 @@ const password = require("../models/password");
 signup = (req, res, next) => {
   // check email white-space, validity and encrypting
   let email = req.body.email.trim();
+  User.findOne({ where: { email: email } }).then((user) => {
+    if (user) {
+      res.status(401).json({ message: "Désolé, cet Email est déja utlisé !" });
+    }
+  });
+
   const emailregex = /^(.*)@(groupomania.org)$/;
   const emailIsvalid = emailregex.test(email);
   if (!emailIsvalid) {
     return res
       .status(400)
-      .json({ message: "A valid email from groupomania is required" });
-
-  } 
-
-  //check userName white-space and prevent injection
+      .json({ message: "Un email Groupomania valide est requis" });
+  }
   userName = req.body.userName.trim();
+
   if (userName.length > 20) {
     return res
       .status(400)
       .json({ message: "UserName must be shorter (max 20 characters)" });
   }
+  
+
+  //check userName white-space and prevent injection
+  User.findOne({ where: { userName: userName } })
+    .then((user) => {
+      if (user) {
+        res
+          .status(401)
+          .json({ message: "Désolé, ce userName est déja utlisé !" });
+      }
+    })
   //hashing password
   passwordHash = bcrypt
     .hash(req.body.password, 10)
@@ -36,25 +51,26 @@ signup = (req, res, next) => {
       });
       user
         .save()
-        .then((user) => res.status(201).json({
-          userName: user.userName,
-          userId: user.id,
-          isAdmin: user.isAdmin,
-          token: jwt.sign(
-            { userId: user.id, isAdmin: user.isAdmin },
-            process.env.TOKEN,
-            {
-              expiresIn: "48h",
-            }
-          ),
-        }))
+        .then((user) =>
+          res.status(201).json({
+            userName: user.userName,
+            userId: user.id,
+            isAdmin: user.isAdmin,
+            token: jwt.sign(
+              { userId: user.id, isAdmin: user.isAdmin },
+              process.env.TOKEN,
+              {
+                expiresIn: "48h",
+              }
+            ),
+          })
+        )
         .catch((error) => res.status(400).json({ error }));
     })
     .catch((error) => res.status(500).json({ error }));
 };
 
 signin = (req, res, next) => {
-   
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {
       if (!user) {
@@ -101,7 +117,7 @@ getProfile = (req, res, next) => {
           userName: user.userName,
           userId: user.id,
           isAdmin: user.isAdmin,
-          email : user.email,
+          email: user.email,
         });
       } else {
         return res.status(401).json({ error: "unauthorized" });
@@ -113,12 +129,12 @@ getProfile = (req, res, next) => {
 modifyProfile = (req, res, next) => {
   User.findOne({
     where: {
-      id: req.params.userId,
+      userName: req.params.userName,
     },
   })
     .then((user) => {
       if (!user) {
-        res.status(400).json({ error: "search error" });
+        return res.status(400).json({ error: "search error" });
       }
       if (user.id == req.token.userId || req.token.isAdmin) {
         //email checking
@@ -130,7 +146,7 @@ modifyProfile = (req, res, next) => {
             return res
               .status(400)
               .json({ message: "A valid groupomania email is required" });
-          } 
+          }
           user.email = email;
         }
         //check userName white-space
@@ -161,6 +177,14 @@ modifyProfile = (req, res, next) => {
             });
           }
         }
+        if (req.token.isAdmin && req.body.isAdmin === true) {
+          user.isAdmin = true;
+        } else if (req.token.isAdmin && req.body.isAdmin === false) {
+          user.isAdmin = false;
+        } else {
+          user.isAdmin = false;
+        }
+
         user
           .save()
           .then(() => res.status(201).json({ user }))
@@ -176,17 +200,17 @@ deleteProfile = (req, res) => {
   })
     .then((user) => {
       if (!user) {
-       return res.status(400).json({ error: "search error" });
+        return res.status(400).json({ error: "search error" });
       }
       if (user.id == req.token.userId || req.token.isAdmin) {
         User.destroy({
           where: { id: user.id },
-        })
+        }).then(() => res.status(200).json({ message: "User deleted" }));
       } else {
         return res.status(401).json({ error: "unauthorized" });
       }
-    }).then(() => res.status(200).json({ message: "User deleted" }))
-    .catch((error) => res.status(500).json(error))
+    })
+    .catch((error) => res.status(500).json(error));
 };
 
 module.exports = {

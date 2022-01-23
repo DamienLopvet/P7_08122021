@@ -1,5 +1,6 @@
 const fs = require("fs");
 const { Post, User, Comment } = require("../models/index");
+const { Op } = require("sequelize");
 
 createPost = (req, res, next) => {
   let message = req.body.message.trim();
@@ -12,21 +13,29 @@ createPost = (req, res, next) => {
     post.attachmentUrl = `${req.protocol}://${req.get("host")}/attachments/${
       req.file.filename
     }`;
-
   }
   if (!message.length && !post.attachmentUrl) {
-    return res.status(400).json({ message: "post cannot be empty!" });
+    return res.status(400).json({ message: "Votre post est vide !" });
   }
   post
     .save()
-    .then(() => res.status(201).json({ message: "Post created!" }))
+    .then((post) =>
+      res.status(201).json({ message: "Post created!", post: post })
+    )
     .catch((error) => res.status(400).json({ error }));
 };
 
 getAllPosts = (req, res, next) => {
   Post.findAll({
+    order: [["id", "DESC"]],
     attributes: ["id", "userId", "message", "attachmentUrl", "createdAt"],
-    include: [User, { model: Comment, include: User }],
+    include: [
+      { model: User, attributes: ["id", "userName"] },
+      {
+        model: Comment,
+       include: { model: User, attributes: ["id", "userName"] },
+      },
+    ],
   })
     .then((post) => res.status(200).json(post))
     .catch((error) => res.status(500).json(error));
@@ -34,24 +43,25 @@ getAllPosts = (req, res, next) => {
 
 getUserPosts = (req, res, next) => {
   User.findOne({
-    where: { userName: req.params.userName },
+    where: { userName: { [Op.like]: req.params.userName + "%" } },
   })
     .then((user) => {
-      if (user) {
-        userFoundedId = user.id;
-      } else {
-        return res.status(400).json({ message: "user not found" });
-      }
+      if (!user) {
+        throw new Error("hey");
+      } else return user;
     })
-    .then(() => {
+    .then((user) => {
+      console.log(user);
       Post.findAll({
-        attributes: ["userId", "message", "attachmentUrl", "createdAt"],
-        where: { userId: userFoundedId },
-      })
-        .then((post) => res.status(200).json(post))
-        
+        order: [["id", "DESC"]],
+        attributes: ["userId", "id", "message", "attachmentUrl", "createdAt"],
+        where: { userId: user.id },
+        include: [User, { model: Comment, include: User }],
+      }).then((post) => res.status(200).json(post));
     })
-    .catch((error) => res.status(500).json(error));
+    .catch((error) => {
+      res.status(400).json({ message: "aucun utilisateur trouvé" });
+    });
 };
 
 modifyPost = (req, res, next) => {
@@ -77,11 +87,13 @@ modifyPost = (req, res, next) => {
         }
 
         if (!message.length && !post.attachmentUrl) {
-          return res.status(400).json({ message: "post cannot be empty!" });
+          return res.status(400).json({ message: "Votre post est vide!" });
         }
         post
           .save()
-          .then(() => res.status(201).json({ message: "Post modified!" }))
+          .then((post) =>
+            res.status(201).json({ message: "Post modified!", post: post })
+          )
           .catch((error) => res.status(500).json(error));
       }
     })

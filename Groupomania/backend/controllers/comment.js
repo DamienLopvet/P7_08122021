@@ -7,9 +7,13 @@ createComment = (req, res, next) => {
     postId: req.params.postId,
     commentaire,
   });
+  if(!commentaire.length){
+    return res.status(400).json({ message: "Le commentaire est vide" })  }
   comment
     .save()
-    .then(() => res.status(201).json({ message: "Comment created!" }))
+    .then((comment) => res.status(201).json({ message: "Comment created!",
+  comment: comment
+  }))
     .catch((error) => res.status(400).json({ error }));
 };
 
@@ -19,7 +23,7 @@ deleteComment = (req, res, next) => {
   })
     .then((comment) => {
       if (!comment) {
-        res.status(400).json({ message: "comment not found!" });
+       throw new Error ("comment not found!");
       }
       if (comment.userId == req.token.userId || req.token.isAdmin) {
         comment.destroy({
@@ -32,4 +36,4 @@ deleteComment = (req, res, next) => {
     .then(() => res.status(201).json({ message: "Comment deleted!" }))
     .catch((error) => res.status(400).json({ error }));
 };
-module.exports = { createComment, deleteComment };
+module.exports = { createComment, deleteComment }

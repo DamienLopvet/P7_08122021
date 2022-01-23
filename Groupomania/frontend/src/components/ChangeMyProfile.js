@@ -1,18 +1,17 @@
+import React from 'react';
+
 import axios from "axios";
 import { useContext, useState } from "react";
 import { UserContext } from "./UserContext";
 
 function ChangeMyProfile() {
 
-  const user = useContext(UserContext);
-  const [profileForm, setProfileForm] = useState(true );
+  const { user } = useContext(UserContext);
 
   const [userName, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const emailError = document.querySelector(".email.error");
-  const passwordError = document.querySelector(".password.error");
-  const userNameError = document.querySelector(".userName.error");
+ 
 
 
 
@@ -25,7 +24,7 @@ const handleProfileForm = (e) => {
         Authorization: "Bearer " + user.token,
       },
       method: "put",
-      url: `${process.env.REACT_APP_API_URL}api/auth/${user.id}/userModify`,
+      url: `${process.env.REACT_APP_API_URL}api/auth/${user.userName}/userModify`,
       withCredentials: false,
       data: {
         userName,
@@ -35,13 +34,18 @@ const handleProfileForm = (e) => {
     })
       .then((res) => {
         if (res.data.error) {
-          userNameError.innerHTML = res.data.errors.userName;
-          emailError.innerHTML = res.data.errors.email;
-          passwordError.innerHTML = res.data.errors.password;
+          
         } else {
           console.log(res.data.user.userName);
           alert("utilisateur modifié!");
-          user.userName = res.data.user.userName
+          document.getElementById("my_userName").innerHTML="UserName : "+ res.data.user.userName;
+          document.getElementById("my_email").innerHTML="email : "+res.data.user.email;
+          if(res.data.user.userName){
+            user.userName = res.data.user.userName
+          }
+          if(res.data.user.email){
+            user.email = res.data.user.email
+          }
           
         }
       })

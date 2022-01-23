@@ -21,7 +21,7 @@ const limiter = require("../middleware/limiter")
 router.post("/signup", password, limiter.userLogLimiter, userCtrl.signup);
 router.post("/signin", limiter.userLogLimiter, userCtrl.signin);
 router.post("/signout", auth, userCtrl.signout);
-router.put("/:userId/userModify", auth, userCtrl.modifyProfile);
+router.put("/:userName/userModify", auth, userCtrl.modifyProfile);
 router.get("/:userName", auth, userCtrl.getProfile);
 router.delete("/:userId", auth, userCtrl.deleteProfile);
 

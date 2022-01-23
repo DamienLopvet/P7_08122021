@@ -1,3 +1,5 @@
+import React from 'react';
+
 import { UserContext } from "./UserContext";
 import axios from "axios";
 import { useContext, useState, useEffect } from "react";
@@ -7,13 +9,9 @@ import DeleteMyProfile from "./DeleteMyProfile";
 
 function MyProfile() {
   const [manageUserProfile, setManageUserProfile] = useState(false);
-  const [userProfileManagement, setUserProfileManagement] = useState(false);
-  const [deleteMyProfile, setDeleteMyProfile] = useState("");
   const [profileForm, setProfileForm] = useState(false );
-  const user = useContext(UserContext);
-  if (deleteMyProfile) {
-    DeleteMyProfile();
-  }
+  const { user } = useContext(UserContext);
+  
 
   const handleProfile = (e) => {
     e.preventDefault();
@@ -36,17 +34,13 @@ function MyProfile() {
     if (e.target.id === "abortUserManagement") {
       setManageUserProfile(false);
     }
-    if (e.target.id === "userProfileManagement") {
-      setUserProfileManagement(true);
-    }
-    if (e.target.id === "DeleteMyProfile") {
-      setDeleteMyProfile(true);
-    }
+        
     if(e.target.id === "abortFindUser"){
       setManageUserProfile(false)
     }
+    
   };
-  const [data, setData] = useState([]);
+ 
   useEffect(async () => {
     axios({
       headers: {
@@ -62,7 +56,8 @@ function MyProfile() {
           console.log("erreur lors du fetch get user");
         } else {
           console.log(res.data);
-          setData(res.data);
+          document.getElementById("my_userName").innerHTML="UserName : "+res.data.userName;
+          document.getElementById("my_email").innerHTML="email : "+res.data.email;
         }
       })
       .catch((err) => {
@@ -75,9 +70,9 @@ function MyProfile() {
       <h2 className="sign_title">Mon Profil</h2>
       <div>
         <h2>Mes données actuelles</h2>
-        <ul className="sign">
-          <li>Nom d'utilisateur : {data.userName}</li>
-          <li>Email : {data.email}</li>
+        <ul className="userInfo">
+          <li id="my_userName"></li>
+          <li id="my_email"></li>
         </ul>
         {profileForm === false && (
           <button onClick={handleProfile} className="btn" id="changeProfile">
@@ -93,13 +88,11 @@ function MyProfile() {
             Changer mes données
           </button>
         )}
-        <button onClick={handleProfile} className="btn" id="DeleteMyProfile">
-          Supprimer mon compte
-        </button>
+        <DeleteMyProfile />
       </div>
       {user.isAdmin && manageUserProfile === false && (
         <button onClick={handleProfile} className="btn" id="changeUserProfile">
-          "Utilisateur Admin"
+          "Administration d'utilisateur"
         </button>
       )}
       {user.isAdmin && manageUserProfile && (
@@ -108,7 +101,7 @@ function MyProfile() {
           className="btn"
           id="abortChangeUserProfile"
         >
-          "Utilisateur Admin"
+          "Administration d'utilisateur"
         </button>
       )}
 
@@ -119,7 +112,7 @@ function MyProfile() {
       {manageUserProfile && <ManageUsersProfile />}
       {manageUserProfile && <button className="btn" id="abortFindUser"
       onClick={handleProfile}>
-        Annuler
+        Terminer
       </button>}
     </>
   );

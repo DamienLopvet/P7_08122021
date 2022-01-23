@@ -1,62 +1,75 @@
+import React from 'react';
+
 import "../styles/Sign.css";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { UserContext } from './UserContext';
-import Home from "./Home";
-import Banner from "./Banner";
+import { UserContext } from "./UserContext";
 
 
 function SignUp() {
-  const [isLogged, setIsLogged]= useState()
+  const [isLogged, setIsLogged] = useState();
 
-    const [userName, setuserName] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const user = useContext(UserContext);
-  
-    const emailError = document.querySelector('.email.error');
-    const passwordError = document.querySelector('.password.error')
-    const userNameError = document.querySelector('.userName.error');
-  
-  
-  const handleSignUp = (e)=>{
-  e.preventDefault()
-  axios({
-    method:'post',
-    url: `${process.env.REACT_APP_API_URL}api/auth/signup`,
-    withCredentials:false,
-    data:{
-      userName,
-      email,
-      password,
-    }
-  }).then((res)=>{
-    if(res.data.error){
-      userNameError.innerHTML = res.data.errors.userName;
-      emailError.innerHTML = res.data.errors.email;
-      passwordError.innerHTML = res.data.errors.password;
-    }
-    else{
-      user.userName= res.data.userName
-      user.id = res.data.userId;
-      user.isAdmin = res.data.isAdmin;
-      user.token = res.data.token
-      user.isLogged = true
-      setIsLogged(true)
-        }
-      }).catch((err)=>{
-        console.log(err)
+  const [userName, setuserName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const { user, setUser } = useContext(UserContext);
+  const [Error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  const handleSignUp = (e) => {
+    e.preventDefault();
+    axios({
+      method: "post",
+      url: `${process.env.REACT_APP_API_URL}api/auth/signup`,
+      withCredentials: false,
+      data: {
+        userName,
+        email,
+        password,
+      },
+    })
+      .then((res) => {
+        let user_ = {};
+        user_.userName = res.data.userName;
+        user_.id = res.data.userId;
+        user_.isAdmin = res.data.isAdmin;
+        user_.token = res.data.token;
+        user_.isLogged = true;
+        setIsLogged(true);
+        setUser(user_);
       })
-    }
-    
-    return !isLogged?(
-      <>
-      
+      .catch((err) => {
+        console.log(err);
+        console.log(err.response.status);
+
+        console.log(err.response.data);
+        if (err.response.status == 400) {
+          setError(true);
+          setErrorMessage(err.response.data.message);
+        } // 401
+        if (err.response.status == 401) {
+          setError(true);
+          setErrorMessage(err.response.data.message);
+        }
+        else if (err.response.status == 429) {
+          setError(true);
+          setErrorMessage(err.response.data);
+        }
+      });
+  };
+
+  return !isLogged ? (
+    <>
       <div className="sign">
         <h1 className="sign_title">
           Créez un compte pour commencer à échanger avec vos collègues
         </h1>
-        <form className="hero" action="" onSubmit={handleSignUp} id="Profile_form">
+        <form
+          className="hero"
+          action=""
+          onSubmit={handleSignUp}
+          id="Profile_form"
+        >
           <label htmlFor="userName">
             <input
               className="sign_field"
@@ -67,8 +80,6 @@ function SignUp() {
               onChange={(e) => setuserName(e.target.value)}
               value={userName}
             />
-            <div className="userName error"></div>
-            
           </label>
           <label htmlFor="email">
             <input
@@ -77,10 +88,9 @@ function SignUp() {
               name="email"
               id="email"
               placeholder="Email"
-              onChange={(e)=>setEmail(e.target.value)}
+              onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
-            <div className="email error"></div>
           </label>
           <label htmlFor="password">
             <input
@@ -89,17 +99,18 @@ function SignUp() {
               name="password"
               id="password"
               placeholder="Mot de passe"
-              onChange={(e)=>setPassword(e.target.value)}
+              onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
-            <div className="password error"></div>
           </label>
-  
+          {Error && <div className="alert">{errorMessage}</div>}
           <input type="submit" value="Créer un compte" className="btn  " />
         </form>
-      </div></>
-    ):("");
-  }
-  
+      </div>
+    </>
+  ) : (
+    ""
+  );
+}
 
-  export default SignUp
+export default SignUp;

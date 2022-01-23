@@ -1,25 +1,28 @@
-import { useContext, useEffect, useState } from "react";
+import React from 'react';
+
+import { useState } from "react";
 import Banner from "./components/Banner";
 import PostsList from "./components/PostsList";
-import SendPost from "./components/SendPost";
 import Sign from "./components/Sign";
 import { UserContext } from "./components/UserContext";
 
 function App() {
-    const user = useContext(UserContext);
-
-  
+  const [user, setUser] = useState({
+    userName: null,
+    id: null,
+    isAdmin: false,
+    token: null,
+    isLogged: false,
+  });
+  const [userName, setUserName] = useState("");
   return (
-    <div>
-      <UserContext.Provider value={user}>
-        
-          <Banner />
-          <Sign />
-          <PostsList />
-          <SendPost />
-
-      </UserContext.Provider>
-    </div>
+    <>
+      <UserContext.Provider value={{ user, setUser }}>
+        <Banner userName={userName} setUserName={setUserName} />
+        <Sign />
+        <PostsList userName={userName} />
+        </UserContext.Provider>
+    </>
   );
 }
 

@@ -1,13 +1,14 @@
+import React from 'react';
+
 import axios from "axios";
-import { useContext, useState } from "react";
+import { useContext } from "react";
 import { UserContext } from "./UserContext";
 
-
-function DeleteMyProfile(){
-    const user = useContext(UserContext);
-
+function DeleteMyProfile() {
+  const { user } = useContext(UserContext);
+  const handleProfile = (e) => {
     const confirm = window.confirm(
-      "etes vous sûr de vouloir supprimer votre compte?"
+      "etes vous sûr de vouloir supprimer ce compte?"
     );
     if (confirm) {
       axios({
@@ -22,13 +23,20 @@ function DeleteMyProfile(){
           if (res.data.error) {
             console.log(res.data.error);
           } else {
+            console.log("delete ok");
+            window.alert("votre profil a bien été supprimé");
             window.location.reload();
           }
         })
         .catch((err) => {
           console.log(err);
         });
-    } else {
-    }
+    } 
   };
-  export default DeleteMyProfile
+  return (
+    <button onClick={handleProfile} className="btn" id="DeleteMyProfile">
+      Supprimer mon compte
+    </button>
+  );
+}
+export default DeleteMyProfile;

@@ -62,8 +62,31 @@
 }
 
 .header_nav_link{
-    background-color:#e8a8ad;
+    background-color:#d1515A;
     border-radius:15px;
     padding: 5px 9px;
     margin: 0 10px;
+}
+
+.userInfo{
+  border: 1px solid #d1515A;
+  padding:10px;
+  margin: 0 10px;
+  border-radius:15px; 
+  list-style-type: none
+}
+.hero .check_box{
+  display: block;
+    margin-left: 20px;
+    font-weight: bold;
+
+}
+#profileManagement_isAdmin{
+  vertical-align: -1px;
+}
+.alert {
+  font-weight: 700;
+  color: red;
+  font-style: italic;
+  margin: auto
 }

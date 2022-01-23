@@ -1,23 +1,29 @@
+import React from 'react';
+
 import axios from "axios";
 import { useState, useContext } from "react";
 import { UserContext } from "./UserContext";
+import "../styles/Sign.css";
+import DeleteUserProfile from "./DeleteUserProfile";
 
 function ManageUsersProfile() {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [userProfileManagement, setUserProfileManagement] = useState(false);
-
   const [userName, setUserName] = useState("");
-  const userInfo = document.querySelector(".userInfo");
+  const [userToManage, setUserToManage] = useState("");
+  const [userIdToManage, setUserIdToManage] = useState("");
+const userInfo = document.getElementById("userInfo");
   const handleManagement = (e) => {
     e.preventDefault();
     if (e.target.id === "userProfileManagement") {
       setUserProfileManagement(true);
+      FindUser();
     }
     if (e.target.id === "abortUserProfileManagement") {
       setUserProfileManagement(false);
     }
-    if(e.target.id === "abortManagementChanges")
-    setUserProfileManagement(false)
+    if (e.target.id === "abortManagementChanges")
+      setUserProfileManagement(false);
   };
 
   function FindUser() {
@@ -37,8 +43,16 @@ function ManageUsersProfile() {
             "Email: " +
             res.data.email +
             " <br/> Username: " +
-            res.data.userName + "<br/>Profile Admin : " + res.data.isAdmin + "<br/>Id utlisateur : " +res.data.userId;
+            res.data.userName +
+            "<br/>Profile Admin : " +
+            res.data.isAdmin +
+            "<br/>Id utlisateur : " +
+            res.data.userId;
+          userInfo.className = "userInfo";
           setUserName("");
+          setUserToManage(res.data.userName);
+          setUserIdToManage(res.data.userId);
+
         }
       })
       .catch((err) => {
@@ -62,39 +76,77 @@ function ManageUsersProfile() {
         onChange={(e) => setUserName(e.target.value)}
         value={userName}
         onClick={FindUser}
-        
       />
-      <div className="userInfo"></div>
-      
-      {userProfileManagement === false &&<button
-        className="btn"
-        id="userProfileManagement"
-        onClick={handleManagement}
-      >
-        Changer les données utilisateur
-      </button>}
-      {userProfileManagement && <button
-        className="btn"
-        id="abortUserProfileManagement"
-        onClick={handleManagement}
-      >
-        Changer les données utilisateur
-      </button>}
+      <div id="userInfo"></div>
+
+      {userProfileManagement === false && (
+        <button
+          className="btn"
+          id="userProfileManagement"
+          onClick={handleManagement}
+        >
+          Changer les données utilisateur
+        </button>
+      )}
+      {userProfileManagement && (
+        <button
+          className="btn"
+          id="abortUserProfileManagement"
+          onClick={handleManagement}
+        >
+          Changer les données utilisateur
+        </button>
+      )}
       {userProfileManagement && <ProfileManagementForm />}
     </div>
   );
 
   function ProfileManagementForm() {
-    function handleUserProfile() {}
     const [userName, setuserName] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [isAdmin, setIsAdmin] = useState(false);
+    const handleUserProfile = (e) => {
+      e.preventDefault();
+      axios({
+        headers: {
+          Authorization: "Bearer " + user.token,
+        },
+        method: "put",
+        url: `${process.env.REACT_APP_API_URL}api/auth/${userToManage}/userModify`,
+        withCredentials: false,
+        data: {
+          userName,
+          email,
+          password,
+          isAdmin,
+        },
+      })
+        .then((res) => {
+          if (res.data.error) {
+          } else {
+            console.log(res.data.user);
+            userInfo.innerHTML =
+              "Email: " +
+              res.data.user.email +
+              " <br/> Username: " +
+              res.data.user.userName +
+              "<br/>Profile Admin : " +
+              res.data.user.isAdmin +
+              "<br/>Id utlisateur : " +
+              res.data.user.id;
+            setUserProfileManagement(false);
+
+            alert("utilisateur modifié!");
+          }
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+
     return (
-      <form
-        action=""
-        onSubmit={handleUserProfile}
-        id="profileManagement_form"
-      >
+      <form action="" onSubmit={handleUserProfile} id="profileManagement_form">
         <label htmlFor="profileManagement_userName">
           <input
             className="sign_field"
@@ -131,14 +183,30 @@ function ManageUsersProfile() {
           />
           <div className="password error"></div>
         </label>
+        <label htmlFor="profileManagement_isAdmin" className="check_box">
+          <input
+            type="checkbox"
+            name="isAdmin"
+            id="profileManagement_isAdmin"
+            onChange={(e) => setIsAdmin(e.target.checked)}
+          />
+          isAdmin
+          <div className="password error"></div>
+        </label>
         <input
           type="submit"
           value="Confirmer les nouvelles données"
           className="btn  "
         />
-        <button className="btn" id="abortManagementChanges" onClick={handleManagement}>
+        <DeleteUserProfile userIdToManage={userIdToManage}/>
+        <button
+          className="btn"
+          id="abortManagementChanges"
+          onClick={handleManagement}
+        >
           Annuler
         </button>
+
       </form>
     );
   }

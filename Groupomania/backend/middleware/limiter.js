@@ -8,8 +8,8 @@ userLogLimiter = new rateLimiter({
   message:
     "Vous avez essayé de vous connecter un trop grand nombre de fois, veuillez attendre 1 heures pour tenter un nouvel essai.",
 
-  onLimitReached: () => {
-mailer.transporter.sendMail(mailer.userLogOverRequested)  },
+//  onLimitReached: () => {
+//mailer.transporter.sendMail(mailer.userLogOverRequested)  },
 });
 
 apiLimiter = new rateLimiter({
@@ -17,9 +17,9 @@ apiLimiter = new rateLimiter({
   max: 100,
   message: "too much request, this is weird?! An email was sent to Admin ",
 
-  onLimitReached: () => {
-    mailer.transporter.sendMail(mailer.apiOverRequested)
-      },
+  //onLimitReached: () => {
+  //  mailer.transporter.sendMail(mailer.apiOverRequested)
+  //    },
 });
 
 module.exports = {apiLimiter, userLogLimiter}

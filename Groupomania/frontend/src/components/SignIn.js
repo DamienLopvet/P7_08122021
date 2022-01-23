@@ -1,3 +1,5 @@
+import React from 'react';
+
 import "../styles/Sign.css";
 import { useContext, useState } from "react";
 import axios from "axios";
@@ -8,10 +10,9 @@ function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   //const [user, setUser]= useState('');
-  let user = useContext(UserContext);
-  const emailError = document.querySelector(".email.error");
-  const passwordError = document.querySelector(".password.error");
-
+  const { user, setUser } = useContext(UserContext);
+  const [signInError, setSignInError] = useState(false);
+  const [signInErrorMessage, setSignInErrorMessage] = useState("");
   const handleSignIn = (e) => {
     e.preventDefault();
 
@@ -25,21 +26,29 @@ function SignIn() {
       },
     })
       .then((res) => {
-        if (res.data.error) {
-          emailError.innerHTML = res.data.error.email;
-          passwordError.innerHTML = res.data.error.password;
-        } else {
-          console.log(res.data);
-          user.userName = res.data.userName;
-          user.id = res.data.userId;
-          user.isAdmin = res.data.isAdmin;
-          user.token = res.data.token;
-          user.isLogged = true;
+         console.log(res.data);
+          let user_ = {};
+          user_.userName = res.data.userName;
+          user_.id = res.data.userId;
+          user_.isAdmin = res.data.isAdmin;
+          user_.token = res.data.token;
+          user_.isLogged = true;
           setIsLogged(true);
-        }
-      })
+          setUser(user_);
+        })
       .catch((err) => {
         console.log(err);
+        console.log(err.response.status);
+
+        console.log(err.response.data); // 401
+        if (err.response.status == 401) {
+          setSignInError(true);
+          setSignInErrorMessage(err.response.data.message);
+        }
+        else if (err.response.status == 429) {
+          setSignInError(true);
+          setSignInErrorMessage(err.response.data);
+        }
       });
   };
 
@@ -77,8 +86,8 @@ function SignIn() {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
-            <div className="password error"></div>
           </label>
+            {signInError && <div className="alert">{signInErrorMessage}</div>}
 
           <input type="submit" value="Se connecter" className="btn" />
         </form>

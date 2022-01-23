@@ -1,12 +1,13 @@
-import { useState } from "react";
+import React from 'react';
+
+import { useState, useContext } from "react";
 import "../styles/Sign.css";
 import { UserContext } from "./UserContext";
-import { useContext } from "react";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
 function Sign() {
-  const user = useContext(UserContext);
+  const { user } = useContext(UserContext);
   const [signUp, setSignUp] = useState(false);
   const [signIn, setSignIn] = useState(true);
 
