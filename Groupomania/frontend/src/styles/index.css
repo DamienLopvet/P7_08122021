@@ -1,15 +1,514 @@
 body {
   background-color: #ffff;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #091F43
+  color: #091f43;
+  max-width: 1920px;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+h1,
+h2,
+h3,
+h4 {
+  text-align: center;
+}
+input:focus,
+input:active,
+textarea:focus,
+textarea:active,
+button:focus,
+button:active {
+  outline: 2px solid white;
+}
+button:focus img {
+  outline: 2px solid white;
+}
+button.delete_button:focus,
+button.delete_button:active,
+input.editIcon:focus,
+input.editIcon:active,
+#commentIcon:focus,
+#commentIcon:active, .header_nav_link:focus,
+.header_nav_link:active,
+img:focus,
+img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
+  outline: 2px solid #d1515a;
+}
+#message:active, #message:focus{
+    outline: 2px solid black;
+
+}
+#messageToModify:active, #messageToModify:focus{
+  outline: 1px solid black;
+
+}
+
+.sign {
+  display: flex;
+  flex-flow: column;
+  justify-content: center;
+}
+.sign_title {
+  margin-left: 10px;
+}
+
+.hero {
+  margin: 10px;
+  padding: 10px;
+  display: flex;
+  background-color: #e8a8ad;
+  box-shadow: 2px 5px 11px -5px #0000007d;
+  border-radius: 5px;
+  flex-flow: column;
+  max-width: 500px;
+  align-self: center;
+  width: 90%;
+}
+.hero label {
+  display: flex;
+  justify-content: center;
+}
+
+.sign_field {
+  border: 1px solid #e8a8ad;
+  border-radius: 5px;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px;
+  width: 80%;
+  text-align: center;
+  max-width: 300px;
+}
+.btn {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #d1515a;
+  width: 85%;
+  align-self: center;
+  background-color: #d1515a;
+  box-shadow: 2px 5px 11px -5px #0000007d;
+  max-width: 230px;
+  cursor: pointer;
+}
+.alternate_sign {
+  display: flex;
+  flex-flow: column;
+}
+.alternate_sign_button {
+  margin: 10px;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #d1515a;
+  background-color: #d1515a;
+  box-shadow: 2px 5px 11px -5px #0000007d;
+  max-width: 322px;
+  align-self: center;
+  width: 50%;
+  cursor: pointer;
+}
+
+.userInfo {
+  border: 1px solid #d1515a;
+  padding: 10px;
+  margin: 20px 10px;
+  border-radius: 5px;
+  list-style-type: none;
+  background-color: #e8a8ad;
+
+  box-shadow: 2px 5px 11px -5px #0000007d;
+}
+.white {
+  background-color: white!important;
+}
+.hero .check_box {
+  margin: 10px auto;
+  font-weight: bold;
+  transform: scale(1.5);
+  align-items: self-end;
+}
+#profileManagement_isAdmin {
+  vertical-align: -1px;
+}
+.alert {
+  font-weight: 700;
+  color: red;
+  font-style: italic;
+  margin: auto;
+}
+.success {
+  border-radius: 15px;
+  font-weight: 700;
+  color: green;
+}
+.sendPost {
+  background-color: #d1515a;
+  border-radius: 0 0 5px 5px;
+  padding: 20px 0;
+  box-shadow: 2px 5px 11px -5px #0000007d;
+  margin-bottom: 20px;
+
+}
+.sendPost_form {
+  text-align: center;
+}
+
+.sendPost_message {
+  width: 67%;
+  height: 15px;
+  border-radius: 15px;
+  border: none;
+  padding: 10px 30px 10px 10px;
+  resize: none;
+}
+.sendPost_message_icon {
+  width: 30px;
+  height: 24px;
+ cursor: pointer;
+ background-color: #d1515a;
+ padding: 7px 5px;
+ vertical-align: 0px;
+ border-radius: 20px;
+}
+.sendPost_attachment_label {
+  position: relative;
+}
+.sendPost_attachment_icon {
+  position: absolute;
+  width: 20px;
+  height: 18px;
+  right: 10px;
+  bottom: 10px;
+  cursor:pointer;
+}
+.sendPost_attachment {
+  position: absolute;
+  width: 19px;
+  height: 20px;
+  right: 10px;
+  bottom: 10px;
+  display: none;
+}
+.sendPost_button,
+.send_comment_button {
+  display: none;
+}
+.send_comment_message {
+  max-width: 300px;
+}
+.send_comment_submit {
+  position: relative;
+}
+.send_comment_submit_icon {
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  bottom: 4px;
+  left: 20px;
+  cursor: pointer;
+  border: 1px solid #e8a8ad;
+  border-radius: 15px;
+  padding: 5px 10px;
+  box-shadow: 4px 4px 8px -3px;
+}
+.send_comment_submit_icon:active {
+  box-shadow: none;
+}
+.send_comment {
+  display: flex;
+  flex-flow: row;
+}
+.send_comment_message {
+  width: 87%;
+  height: 15px;
+  border-radius: 15px;
+  border: 1px solid #e8a8ad;
+  padding: 10px 30px 10px 10px;
+  resize: none;
+}
+.delete_icon {
+  width: 15px;
+  height: 15px;
+  padding: 4px 1px;
+  cursor: pointer;
+}
+.delete_button {
+  border: none;
+  background: none;
+  transform: translateY(-5px);
+}
+.delete_button:active {
+  border: 1px solid #e8a8ad;
+  border-radius: 5px;
+}
+#messageToModify{
+  border: 2px solid #d1515a;
+}
+#messageToModifyIcon:focus,
+#messageToModifyIcon:active{
+  outline: 2px solid black;
+
+}
+.search {
+  
+  display: flex;
+  flex-flow: row;
+  justify-content: flex-end;
+  position: relative;
+  padding-bottom:10px
+}
+.search_input {
+  width: 17px;
+  max-width: 315px;
+  border-radius: 15px;
+  border: 1px solid #d1515a;
+  margin: 5px 10px 5px 0;
+  padding: 8px;
+  
+}
+
+.search_input:hover {
+  width: 40%;
+  transition-duration: 400ms;
+}
+.search_input:focus, .search_input:active {
+  width: 40%;
+
+  transition-duration: 400ms;
+}
+
+.search_icon {
+  position: absolute;
+    bottom: 22px;
+    right: 19px;
+    width: 17px;
+    pointer-events: none;
+    background: white;
+
+}
+.userNameWelcome{
+  align-self: center;
+    position: absolute;
+    left: 10px;
+    font-size:18px;
+    
+}
+.userNameWelcome strong{
+  text-transform: capitalize;
+}
+
+.messageList {
+  list-style: none;
+  margin: 0;
+  padding: 0 20px;
+}
+.messageList_card {
+  border-radius: 15px;
+  margin: 10px 0;
+  box-shadow: 2px 5px 11px -5px #0000007d;
+  padding: 20px 10px;
+  max-width: 520px;
+}
+
+.messageList_attachment {
+  background-color: lightgrey;
+  border-radius: 20px;
+  margin-bottom: 10px;
+  width: 100%;
+}
+.messageList_message {
+  background-color: #f2f2f2;
+  border-radius: 20px;
+  max-width: 500px;
+  padding: 10px;
+}
+.messagList_date {
+  font-size: 12px;
+  color: grey;
+  text-align: center;
+  position: relative;
+}
+#commentIcon {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  padding: 5px
+}
+.messageList_comment {
+  border-radius: 15px;
+  margin: 10px 0;
+  border: 2px solid #e8a8ad;
+  padding: 10px;
+  background-color: #ebe6e6eb;
+  list-style-type: none;
+  max-width: 500px;
+}
+.commentaire_user {
+  overflow-wrap: break-word;
+  font-style: italic;
+  color: #724444;
+}
+.comment_userName {
+  font-size: 8px;
+  border-bottom: 1px solid white;
+  margin-bottom: 5px;
+  color: #e8a8ad;
+}
+.comment_date {
+  font-size: 8px;
+  color: #d4baba;
+}
+.comment_info {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.sendComment_message {
+  width: 60%;
+  height: 15px;
+  border-radius: 15px;
+  border: 1px solid #e8a8ad;
+  padding: 10px 30px 10px 10px;
+  resize: none;
+}
+#delete_post_button {
+  position: absolute;
+  right: 0px;
+  top: 0px;
+  opacity: 0.5;
+}
+#delete_post_button:hover {
+  opacity: 1;
+}
+.editIcon {
+  width: 15px;
+  height: 15px;
+  position: absolute;
+  right: 1px;
+  top: 20px;
+  opacity: 0.5;
+  padding: 5px;
+}
+.editIcon:hover {
+  opacity: 1;
+}
+.alert_box {
+  background: #e8a8ad;
+  display: flex;
+  flex-flow: row;
+  justify-content: center;
+  cursor: pointer;
+}
+.alert_box p {
+  margin: 0;
+  font-size: 16px;
+  text-align: center;
+}
+.alert_button {
+  padding: 5px 10px;
+  margin-top: 10px;
+  border-radius: 10px;
+  border: 1px solid #d1515a;
+}
+.message_list_option .alert_box {
+  background: none !important;
+}
+.attachment {
+  display: flex;
+  flex-flow: row;
+  align-items: center;
+  color: black;
+  margin-left: 20px;
+}
+.banner {
+  border-bottom: 4px solid #d1515a;
+}
+.header {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-between;
+  margin: 0 20px;
+  position: relative;
+}
+.header_brand {
+  display: flex;
+  flex-flow: row;
+  cursor:pointer;
+}
+
+.header_brand h1 {
+  margin: 10px;
+}
+.header_logo {
+  width: 40px;
+  height: 40px;
+  align-self: center;
+  padding: 0 10px;
+}
+.header_nav {
+  align-self: center;
+  padding-bottom: 10px;
+  margin-top: 10px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+.header_nav_link {
+  background-color: #fff;
+  border-radius: 2px;
+  border: 1px solid #091f43;
+  padding: 5px 9px;
+  color: #091f43;
+cursor:pointer;
+  text-decoration: none;
+  color: #091f43;
+  margin: 5px;
+}
+.center {
+  max-width: 520px;
+  margin:auto;
+}
+.ontop{
+  position: absolute;
+    background: white;
+    height: 500%;
+    width: 100%;
+    z-index: 10;
+    background: rgb(255 255 255 / 79%);
+}
+
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+

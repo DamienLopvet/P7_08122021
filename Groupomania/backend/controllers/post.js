@@ -75,6 +75,7 @@ modifyPost = (req, res, next) => {
         return res.status(400).json({ message: "post not found" });
       }
       if (post.userId == req.token.userId || req.token.isAdmin) {
+        post.attachmentUrl=null
         message = req.body.message.trim();
         post.id = req.params.messageId;
         post.message = message;

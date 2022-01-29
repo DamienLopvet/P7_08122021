@@ -1,12 +1,11 @@
 import React from 'react';
-
 import axios from "axios";
 import { useContext } from "react";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../UserContext";
 
 
 
-function DeleteUserProfile({userIdToManage}){
+function DeleteUserProfile({userIdToManage, setInfo, setSuccessMessage }){
     const {user} = useContext(UserContext);
         const handleDeleteUserProfile = (e) => {
           const confirm = window.confirm(
@@ -25,9 +24,9 @@ function DeleteUserProfile({userIdToManage}){
                 if (res.data.error) {
                   console.log(res.data.error);
                 } else {
-                  console.log("delete ok");
-                  window.alert("Le profil a bien été supprimé");
-                  document.getElementById("userInfo").innerHTML = "Utilisateur supprimé"
+                  console.log("USer deleted");
+                  setInfo(false)
+                  setSuccessMessage("L'utilisateur à bien été supprimé de la base de donnée !")  
                 }
               })
               .catch((err) => {

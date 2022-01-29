@@ -1,8 +1,7 @@
-import React from 'react';
-
+import React from "react";
 import { useState, useContext } from "react";
-import "../styles/Sign.css";
-import { UserContext } from "./UserContext";
+import "../../styles/index.css";
+import { UserContext } from "../UserContext";
 import SignIn from "./SignIn";
 import SignUp from "./SignUp";
 
@@ -46,7 +45,9 @@ function Sign() {
         </button>
       </div>
     )
-  ) : ("");
+  ) : (
+    ""
+  );
 }
 
 export default Sign;

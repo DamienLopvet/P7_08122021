@@ -1,81 +1,85 @@
-import React from 'react';
+import React from "react";
 import { useState, useContext } from "react";
 import logo from "../assets/logo.png";
-import "../styles/Banner.css";
+import "../styles/index.css";
 import { UserContext } from "./UserContext";
-import MyProfile from "./MyProfile";
+import MyProfile from "./Profiles/MyProfile";
 import Search from "./Search";
+import ManageUsersProfile from "./Profiles/ManageUsersProfile";
 
-function Nav() {
+
+
+function Banner({ userName, setUserName }) {
   const { user } = useContext(UserContext);
   const [viewProfile, setViewProfile] = useState(false);
-
-  function Signout(e) {
-    e.preventDefault();
-    user.token = "";
-    user.isLogged = false;
-    window.location.reload();
-  }
+  const [manageUserProfile, setManageUserProfile] = useState(false);
 
   function handleClick(e) {
     e.preventDefault();
     if (e.target.id === "voirMonProfile") {
-      setViewProfile(true);
-    }
-    if (e.target.id === "cacherMonProfile") {
+      setViewProfile(!viewProfile);
+      setManageUserProfile(false);
+    } else if (e.target.id === "manage_user_profile") {
+      setManageUserProfile(!manageUserProfile);
       setViewProfile(false);
+    } else if (e.target.id === "signout") {
+      user.token = "";
+      user.isLogged = false;
+      window.location.reload();
+    }
+  
+  }
+  function showManagerProfileForm(e){
+    if (e.target.id === "ontopAdmin") {
+      setManageUserProfile(!manageUserProfile)
+      
     }
   }
-  return user.isLogged ? (
-    <div className="header_nav">
-      {viewProfile === false && (
-        <a
-          className="header_nav_link"
-          href=""
-          onClick={handleClick}
-          rel="noopener noreferrer"
-          id="voirMonProfile"
-        >
-          Mon profil
-        </a>
-      )}
-      {viewProfile && (
-        <a
-          className="header_nav_link"
-          href=""
-          onClick={handleClick}
-          rel="noopener noreferrer"
-          id="cacherMonProfile"
-        >
-          Mon profil
-        </a>
-      )}
-      <a
-        className="header_nav_link"
-        href=""
-        target=""
-        id="signout"
-        onClick={Signout}
-      >
-        Signout
-      </a>
-      {viewProfile && <MyProfile />}
-    </div>
-  ) : (
-    ""
-  );
-}
 
-function Banner({userName, setUserName}) {
   return (
     <div className="banner">
       <header className="header">
-        <div className="header_brand">
+        <div className="header_brand" onClick={e => window.location.reload()}>
           <img src={logo} className="header_logo" alt="logo Groupomania" />
           <h1>Groupomania</h1>
         </div>
-        <Nav />
+        {user.isLogged && (
+          <div className="header_nav">
+            <button
+              className="header_nav_link"
+              href=""
+              onClick={handleClick}
+              rel="noopener noreferrer"
+              id="voirMonProfile"
+            >
+              Mon profil
+            </button>
+            <button
+              className="header_nav_link"
+              href=""
+              target=""
+              id="signout"
+              onClick={handleClick}
+            >
+              Deconnexion
+            </button>{" "}
+            {user.isAdmin && (
+              <button
+                className="header_nav_link"
+                href=""
+                target=""
+                id="manage_user_profile"
+                onClick={handleClick}
+              >
+                Admin
+              </button>
+            )}
+          </div>
+        )}
       </header>
+      {viewProfile && <MyProfile setViewProfile={setViewProfile}/>}
+      {manageUserProfile && <div className="ontop" id="ontopAdmin"
+      onClick={showManagerProfileForm}><ManageUsersProfile /></div>}
       <Search userName={userName} setUserName={setUserName} />
     </div>
   );

@@ -1,24 +1,24 @@
-import React from 'react';
-
+import React from "react";
+import "../../styles/index.css";
 import axios from "axios";
 import { useContext, useState } from "react";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../UserContext";
 
-function ChangeMyProfile() {
-
+function ChangeMyProfile({ setSuccessMessage, setUserInfo,setProfileForm }) {
   const { user } = useContext(UserContext);
 
-  const [userName, setuserName] = useState("");
+  const [userName, setUserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
- 
+  const [modifyMyProfilError, setModifyMyProfilError] = useState(false);
+  const [modifyMyProfilErrorMessage, setModifyMyProfilErrorMessage] =
+    useState("");
 
-
-
- 
-
-const handleProfileForm = (e) => {
+  const handleProfileForm = (e) => {
     e.preventDefault();
+    setSuccessMessage("");
+    setModifyMyProfilError(false);
+
     axios({
       headers: {
         Authorization: "Bearer " + user.token,
@@ -33,29 +33,34 @@ const handleProfileForm = (e) => {
       },
     })
       .then((res) => {
-        if (res.data.error) {
-          
-        } else {
-          console.log(res.data.user.userName);
-          alert("utilisateur modifié!");
-          document.getElementById("my_userName").innerHTML="UserName : "+ res.data.user.userName;
-          document.getElementById("my_email").innerHTML="email : "+res.data.user.email;
-          if(res.data.user.userName){
-            user.userName = res.data.user.userName
-          }
-          if(res.data.user.email){
-            user.email = res.data.user.email
-          }
-          
-        }
+        console.log(res.data[0].userName);
+        setUserInfo(res.data);
+        setSuccessMessage("Vos données ont été modifiées !");
+        user.userName = res.data[0].userName;
+        console.log(user);
       })
       .catch((err) => {
-        console.log(err);
+        console.log(err.response.data);
+
+        if (err.response.data.error) {
+          console.log(
+            err.response.data.error.errors[0].message.split("undefined")[1]
+          );
+          setModifyMyProfilError(true);
+          setModifyMyProfilErrorMessage(
+            err.response.data.error.errors[0].message.split("undefined")[1]
+          );
+        } else if (err.response.data.message) {
+          console.log(err.response.data.message);
+          setModifyMyProfilError(true);
+          setModifyMyProfilErrorMessage(err.response.data.message);
+        }
       });
   };
 
   return (
     <div className="hero">
+      <h3>Changer mes données :</h3>
       <form
         className="sign"
         action=""
@@ -69,7 +74,7 @@ const handleProfileForm = (e) => {
             name="userName"
             id="userName"
             placeholder="Nouveau nom d'utlisateur"
-            onChange={(e) => setuserName(e.target.value)}
+            onChange={(e) => setUserName(e.target.value)}
             value={userName}
           />
           <div className="userName error"></div>
@@ -96,18 +101,26 @@ const handleProfileForm = (e) => {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-          <div className="password error"></div>
         </label>
+        {modifyMyProfilError && (
+          <div
+            className="alert_box alert"
+            onClick={() => setModifyMyProfilError(false)}
+          >
+            <p>{modifyMyProfilErrorMessage}</p>
+          </div>
+        )}
         <input
           type="submit"
           value="Confirmer les nouvelles données"
           className="btn  "
         />
       </form>
-      
-      
+      <button className="btn" id="abortChanges" onClick={() => setProfileForm(false)}>
+          Annuler
+        </button>
     </div>
-  )
+  );
 }
 
 export default ChangeMyProfile;

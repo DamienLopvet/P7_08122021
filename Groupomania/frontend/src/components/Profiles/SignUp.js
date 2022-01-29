@@ -1,18 +1,16 @@
-import React from 'react';
+import React from "react";
 
-import "../styles/Sign.css";
+import "../../styles/index.css";
 import { useContext, useState } from "react";
 import axios from "axios";
-import { UserContext } from "./UserContext";
-
+import { UserContext } from "../UserContext";
 
 function SignUp() {
   const [isLogged, setIsLogged] = useState();
-
-  const [userName, setuserName] = useState("");
+const [userName, setuserName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const { user, setUser } = useContext(UserContext);
+  const { setUser } = useContext(UserContext);
   const [Error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
 
@@ -43,18 +41,9 @@ function SignUp() {
         console.log(err.response.status);
 
         console.log(err.response.data);
-        if (err.response.status == 400) {
-          setError(true);
-          setErrorMessage(err.response.data.message);
-        } // 401
-        if (err.response.status == 401) {
-          setError(true);
-          setErrorMessage(err.response.data.message);
-        }
-        else if (err.response.status == 429) {
-          setError(true);
-          setErrorMessage(err.response.data);
-        }
+
+        setError(true);
+        setErrorMessage(err.response.data.message);
       });
   };
 

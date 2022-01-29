@@ -1,16 +1,14 @@
-import React  from 'react';
+import React from "react";
 import { useState, useContext } from "react";
-import Comments from "./Comments";
-import commentIcon from "../assets/commentIcon.png";
-import { UserContext } from "./UserContext";
+import Comments from "../Comments/Comments";
+import commentIcon from "../../assets/commentIcon.png";
+import { UserContext } from "../UserContext";
 import DeletePost from "./DeletePost";
-import editIcon from "../assets/editIcon.png";
+import editIcon from "../../assets/editIcon.png";
 import ModifyPost from "./ModifyPost";
-import moment from 'moment';
-import localization from 'moment/locale/fr';
-moment.updateLocale('fr', localization);
-
-
+import moment from "moment";
+import localization from "moment/locale/fr";
+moment.updateLocale("fr", localization);
 
 const Post = ({
   post,
@@ -18,6 +16,12 @@ const Post = ({
   onModifyPost,
   onDeleteComment,
   onAddComment,
+  modifyPostError,
+  setModifyPostError,
+  modifyPostErrorMessage,
+  setCommentError,
+  commentError,
+  commentErrorMessage,
 }) => {
   const { user } = useContext(UserContext);
 
@@ -26,28 +30,36 @@ const Post = ({
   const resetShowModifyPost = () => {
     setShowModifyPost(false);
   };
-moment.locale('fr')
+  moment.locale("fr");
 
   return (
-    <li key={post.id} className="messageList_card">
+    <li key={"singlePost_" + post.id} className="messageList_card">
       <div className="messagList_date">
-        {moment(post.createdAt).format('dddd D MMMM YYYY à H:mm ')}
+        {moment(post.createdAt).format("dddd D MMMM YYYY à H:mm ")}
         {(post.user.userName === user.userName || user.isAdmin) && (
           <>
-            <DeletePost key={post.id} id={post.id} onDelete={onDelete} />
-            <img
+            <DeletePost
+              key={"delete_" + post.id}
+              id={post.id}
+              onDelete={onDelete}
+            />
+            <input
+            type="image"
               src={editIcon}
               alt="edit post"
               className="editIcon"
               onClick={(e) => setShowModifyPost(!showModifyPost)}
-            ></img>
+              tabIndex="0"
+            ></input>
             {showModifyPost && (
               <ModifyPost
-                key={post.id}
+                key={"modify_" + post.id}
                 postId={post.id}
                 onModifyPost={onModifyPost}
                 setShowModifyPost={resetShowModifyPost}
-                
+                modifyPostError={modifyPostError}
+                modifyPostErrorMessage={modifyPostErrorMessage}
+                setModifyPostError={setModifyPostError}
               />
             )}
           </>
@@ -79,18 +91,23 @@ moment.locale('fr')
       )}
 
       <div className="message_list_option">
-        <img
+        <input
+        type="image"
           src={commentIcon}
           alt="commentaires"
           id="commentIcon"
           onClick={(e) => setShowComment(!showComment)}
-        ></img>
+          tabIndex="0"
+        ></input>
         {showComment && (
           <Comments
             comments={post.comments}
             onAdd={onAddComment}
             postId={post.id}
             onDelete={onDeleteComment}
+            setCommentError={setCommentError}
+            commentError={commentError}
+            commentErrorMessage={commentErrorMessage}
           />
         )}
       </div>

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useContext } from "react";
 import DeleteComment from "./DeleteComment";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../UserContext";
 import moment from 'moment';
 import localization from 'moment/locale/fr';
 moment.updateLocale('fr', localization);
@@ -12,7 +12,7 @@ const { user } = useContext(UserContext);
 
 
   return (
-    <li>
+    <li key={"singleComment_"+id}>
       <div className="commentaire_user">
         {commentaire}
         <div className="comment_info">

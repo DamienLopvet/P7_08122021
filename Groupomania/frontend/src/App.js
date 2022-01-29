@@ -1,9 +1,9 @@
-import React from 'react';
+import React from "react";
 
 import { useState } from "react";
 import Banner from "./components/Banner";
-import PostsList from "./components/PostsList";
-import Sign from "./components/Sign";
+import PostsList from "./components/Post/PostsList";
+import Sign from "./components/Profiles/Sign";
 import { UserContext } from "./components/UserContext";
 
 function App() {
@@ -21,7 +21,7 @@ function App() {
         <Banner userName={userName} setUserName={setUserName} />
         <Sign />
         <PostsList userName={userName} />
-        </UserContext.Provider>
+      </UserContext.Provider>
     </>
   );
 }

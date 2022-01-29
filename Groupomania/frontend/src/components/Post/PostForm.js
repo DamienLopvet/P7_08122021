@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import "../styles/sendPost.css";
-import sendMessage from "../assets/sendMessage.png";
-import trombone from "../assets/trombone.png";
-import { UserContext } from "./UserContext";
+import "../../styles/index.css";
+import sendMessage from "../../assets/sendMessage.png";
+import trombone from "../../assets/trombone.png";
+import { UserContext } from "../UserContext";
 import { useContext } from "react";
-import deleteIcon from "../assets/deleteIcon.png";
+import deleteIcon from "../../assets/deleteIcon.png";
 
 function PostForm({ onAdd }) {
   const [message, setMessage] = useState("");
@@ -14,10 +14,9 @@ function PostForm({ onAdd }) {
     setMessage("");
     setAttachmentUrl(null);
   };
-  
+
   return user.isLogged ? (
     <div className="sendPost">
-      
       <form action="" className="sendPost_form">
         <label htmlFor="message" className="sendPost_message_label">
           <textarea
@@ -41,22 +40,28 @@ function PostForm({ onAdd }) {
             type="file"
             name="attachmentUrl"
             id="attachmentUrl"
-            onChange={(e) => setAttachmentUrl(e.target.files[0])}
+            onChange={(e) =>setAttachmentUrl(e.target.files[0])}
           />
         </label>
         <label htmlFor="submit">
-          <img
+          <input
+            type="image"
             src={sendMessage}
             className="sendPost_message_icon"
             alt="send message icon"
-            onClick={() => onAdd(attachmentUrl, message, reset)}
+            onClick={(e) => {e.preventDefault(); onAdd(attachmentUrl, message, reset)}}
           />
         </label>
       </form>
       {attachmentUrl && (
         <div className="attachment">
-          <img src={attachmentUrl.name} alt="attachment" />
-          <img src={deleteIcon} alt="icon de suppression" className="delete_icon" onClick={() => setAttachmentUrl(null)} />
+          <span>Pièce jointe</span>
+          <img
+            src={deleteIcon}
+            alt="icon de suppression"
+            className="delete_icon"
+            onClick={() => setAttachmentUrl(null)}
+          />
         </div>
       )}
     </div>

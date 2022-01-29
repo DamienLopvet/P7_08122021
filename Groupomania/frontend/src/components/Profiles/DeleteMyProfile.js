@@ -1,8 +1,7 @@
 import React from 'react';
-
 import axios from "axios";
 import { useContext } from "react";
-import { UserContext } from "./UserContext";
+import { UserContext } from "../UserContext";
 
 function DeleteMyProfile() {
   const { user } = useContext(UserContext);
