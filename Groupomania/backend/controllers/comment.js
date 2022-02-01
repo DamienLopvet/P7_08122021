@@ -1,5 +1,17 @@
 const Comment = require("../models/Comment");
 
+
+/**
+ * @swagger
+ * /api/messages/{postId}/comment:
+ *  post:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 createComment = (req, res, next) => {
   const commentaire = req.body.comment.trim();
   const comment = new Comment({
@@ -17,6 +29,18 @@ createComment = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
+
+/**
+ * @swagger
+ * /api/messages/comment/{commentId}:
+ *  deletex:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 deleteComment = (req, res, next) => {
   Comment.findOne({
     where: { id: req.params.commentId },

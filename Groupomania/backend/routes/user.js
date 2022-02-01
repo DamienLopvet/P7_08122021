@@ -20,7 +20,6 @@ const limiter = require("../middleware/limiter");
 //set up module each route need to pass through
 router.post("/signup", password, limiter.userLogLimiter, userCtrl.signup);
 router.post("/signin", limiter.userLogLimiter, userCtrl.signin);
-router.post("/signout", auth, limiter.apiLimiter, userCtrl.signout);
 router.put(
   "/:userName/userModify",
   auth,

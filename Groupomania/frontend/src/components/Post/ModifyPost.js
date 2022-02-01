@@ -17,7 +17,6 @@ const ModifyPost = ({
     setNewAttachmentUrl(null);
     setModifyPostError(false)
   };
-
   return (
     <div className="sendPost white">
       <form action="" className="sendPost_form">

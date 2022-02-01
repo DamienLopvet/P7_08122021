@@ -2,6 +2,21 @@ const fs = require("fs");
 const { Post, User, Comment } = require("../models/index");
 const { Op } = require("sequelize");
 
+
+//routes
+
+
+/**
+ * @swagger
+ * /api/messages:
+ *  post:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 createPost = (req, res, next) => {
   let message = req.body.message.trim();
 
@@ -25,6 +40,17 @@ createPost = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
+/**
+ * @swagger
+ * /api/messages:
+ *  get:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 getAllPosts = (req, res, next) => {
   Post.findAll({
     order: [["id", "DESC"]],
@@ -33,7 +59,7 @@ getAllPosts = (req, res, next) => {
       { model: User, attributes: ["id", "userName"] },
       {
         model: Comment,
-       include: { model: User, attributes: ["id", "userName"] },
+        include: { model: User, attributes: ["id", "userName"] },
       },
     ],
   })
@@ -41,6 +67,17 @@ getAllPosts = (req, res, next) => {
     .catch((error) => res.status(500).json(error));
 };
 
+/**
+ * @swagger
+ * /api/messages/{userName}:
+ *  get:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 getUserPosts = (req, res, next) => {
   User.findOne({
     where: { userName: { [Op.like]: req.params.userName + "%" } },
@@ -64,6 +101,17 @@ getUserPosts = (req, res, next) => {
     });
 };
 
+/**
+ * @swagger
+ * /api/messages/{messageId}:
+ *  put:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 modifyPost = (req, res, next) => {
   Post.findOne({
     where: {
@@ -75,7 +123,7 @@ modifyPost = (req, res, next) => {
         return res.status(400).json({ message: "post not found" });
       }
       if (post.userId == req.token.userId || req.token.isAdmin) {
-        post.attachmentUrl=null
+        post.attachmentUrl = null;
         message = req.body.message.trim();
         post.id = req.params.messageId;
         post.message = message;
@@ -101,6 +149,17 @@ modifyPost = (req, res, next) => {
     .catch((error) => res.status(500).json(error));
 };
 
+/**
+ * @swagger
+ * /api/messages/{messageId}:
+ *  delete:
+ *    description: Envoie d'un post par l'utilisateur
+ *    responses:
+ *      '200':
+ *        description: Successfull response
+ *
+ * 
+ */
 deletePost = (req, res, next) => {
   Post.findOne({
     where: {

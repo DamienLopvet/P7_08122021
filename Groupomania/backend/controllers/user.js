@@ -6,6 +6,17 @@ const cryptoJs = require("crypto-js");
 const password = require("../models/password");
 const { Op } = require("sequelize");
 
+
+/**
+ * @swagger
+ * /api/auth/signup:
+ *  post:
+ *    description: Inscription d'un utilisateur 
+ *    responses:
+ *      '201':
+ *        description: Successfull response
+ * 
+ */
 signup = async (req, res, next) => {
   // check email white-space, validity and encrypting
   let email = req.body.email.trim();
@@ -75,6 +86,16 @@ signup = async (req, res, next) => {
   }
 };
 
+/**
+ * @swagger
+ * /api/auth/signin:
+ *  post:
+ *    description: Inscription d'un utilisateur 
+ *    responses:
+ *      '201':
+ *        description: Successfull response
+ * 
+ */
 signin = (req, res, next) => {
   User.findOne({ where: { email: req.body.email } })
     .then((user) => {
@@ -107,8 +128,16 @@ signin = (req, res, next) => {
     .catch((error) => res.status(500).json({ error }));
 };
 
-signout = (req, res) => {};
-
+/**
+ * @swagger
+ * /api/auth/{userName}:
+ *  get:
+ *    description: Inscription d'un utilisateur 
+ *    responses:
+ *      '201':
+ *        description: Successfull response
+ * 
+ */
 getProfile = (req, res, next) => {
   User.findOne({
     where: { userName: { [Op.like]: req.params.userName + "%" } },
@@ -135,6 +164,16 @@ getProfile = (req, res, next) => {
     .catch((error) => res.status(500).json(error));
 };
 
+/**
+ * @swagger
+ * /api/auth/{userName}/userModify:
+ *  put:
+ *    description: Inscription d'un utilisateur 
+ *    responses:
+ *      '201':
+ *        description: Successfull response
+ * 
+ */
 modifyProfile = (req, res, next) => {
   User.findOne({
     where: {
@@ -210,6 +249,16 @@ modifyProfile = (req, res, next) => {
     .catch((error) => res.status(400).json({ error }));
 };
 
+/**
+ * @swagger
+ * /api/auth/{userId}:
+ *  delete:
+ *    description: Inscription d'un utilisateur 
+ *    responses:
+ *      '20':
+ *        description: Successfull response
+ * 
+ */
 deleteProfile = (req, res) => {
   User.findOne({
     where: { id: req.params.userId },
@@ -234,7 +283,6 @@ deleteProfile = (req, res) => {
 module.exports = {
   signup,
   signin,
-  signout,
   getProfile,
   modifyProfile,
   deleteProfile,

@@ -403,7 +403,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   opacity: 1;
 }
 .alert_box {
-  background: #e8a8ad;
+ 
   display: flex;
   flex-flow: row;
   justify-content: center;
@@ -510,5 +510,9 @@ cursor:pointer;
 .App-link {
   color: #61dafb;
 }
-
+#deleteIcon_sendpost{
+  background: white;
+  border-radius: 10px;
+  padding: 5px;
+}
 

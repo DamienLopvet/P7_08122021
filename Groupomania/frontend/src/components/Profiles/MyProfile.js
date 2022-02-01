@@ -73,13 +73,13 @@ function MyProfile({ setViewProfile }) {
             </>
           )}
 
-          {!user.isAdmin && (
+          
             <button onClick={handleProfile} className="btn" id="changeProfile">
               Changer mes données
             </button>
-          )}
+          
 
-          {!user.isAdmin && <DeleteMyProfile />}
+        <DeleteMyProfile />
         </div>
 
         {profileForm && (

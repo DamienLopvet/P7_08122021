@@ -58,6 +58,7 @@ function PostForm({ onAdd }) {
           <span>Pièce jointe</span>
           <img
             src={deleteIcon}
+            id="deleteIcon_sendpost"
             alt="icon de suppression"
             className="delete_icon"
             onClick={() => setAttachmentUrl(null)}

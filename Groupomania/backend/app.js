@@ -1,12 +1,13 @@
 //import environment variables module
-require('dotenv').config
-const {connexion} = require('./models/connexion')
-const {loadModel} = require('./models/index')
-const cors = require('cors')
-
-
 const express = require("express");
 const app = express();
+require("dotenv").config;
+const { connexion } = require("./models/connexion");
+const { loadModel } = require("./models/index");
+const cors = require("cors");
+const swaggerJsDoc = require("swagger-jsdoc");
+const swaggerUi = require("swagger-ui-express");
+
 
 
 //give access to files path
@@ -19,6 +20,21 @@ const helmet = require("helmet");
 const postRoutes = require("./routes/post");
 const userRoutes = require("./routes/user");
 const commentRoutes = require("./routes/comment");
+
+const swaggerOptions = {
+  swaggerDefinition: {
+    info: {
+      title: "Groupomania API",
+      description: "Specification de l'API Groupomania",
+      version: "1.0.0",
+      contact: {
+        name: "Damien",
+      },
+      servers: ["http://localhost:3030"],
+    },
+  },
+  apis: ["./controllers/*.js"],
+};
 
 connexion();
 loadModel();
@@ -45,11 +61,13 @@ app.use(express.json());
 //static use of image datas
 app.use("/attachments", express.static(path.join(__dirname, "attachments")));
 
-//set up  with frontend root 
+//set up  with frontend root
 app.use("/api/messages", postRoutes);
 app.use("/api/messages", commentRoutes);
 app.use("/api/auth", userRoutes);
 
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs , { explorer: true }));
 
 
-module.exports = app
+module.exports = app;

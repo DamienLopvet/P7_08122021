@@ -20,6 +20,8 @@
     "mysql2": "^2.3.3",
     "nodemailer": "^6.7.2",
     "password-validator": "^5.2.1",
-    "sequelize": "^6.12.4"
+    "sequelize": "^6.12.4",
+    "swagger-jsdoc": "^6.1.0",
+    "swagger-ui-express": "^4.3.0"
   }
 }
