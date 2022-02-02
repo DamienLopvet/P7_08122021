@@ -1,5 +1,4 @@
 body {
-  background-color: #ffff;
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
@@ -8,6 +7,23 @@ body {
   -moz-osx-font-smoothing: grayscale;
   color: #091f43;
   max-width: 1920px;
+  background-image: url(https://www.history.com/.image/ar_16:9%2Cc_fill%2Ccs_srgb%2Cfl_progressive%2Cq_auto:good%2Cw_1200/MTg0NTg4OTc1MDYxNjA3OTEx/interstate-highway-gettyimages-1318535229.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-attachment: fixed;
+  height: 100vh;
+}
+body:before {
+  content: "";
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: -1;
+  display: block;
+  background-color: white;
+  width: 100%;
+  height: 100%;
+  opacity: 0.9;
 }
 
 code {
@@ -36,19 +52,22 @@ button.delete_button:active,
 input.editIcon:focus,
 input.editIcon:active,
 #commentIcon:focus,
-#commentIcon:active, .header_nav_link:focus,
+#commentIcon:active,
+.header_nav_link:focus,
 .header_nav_link:active,
 img:focus,
-img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
+img:active,
+.send_comment_submit_icon:focus,
+.send_comment_submit_icon:active {
   outline: 2px solid #d1515a;
 }
-#message:active, #message:focus{
-    outline: 2px solid black;
-
+#message:active,
+#message:focus {
+  outline: 2px solid black;
 }
-#messageToModify:active, #messageToModify:focus{
+#messageToModify:active,
+#messageToModify:focus {
   outline: 1px solid black;
-
 }
 
 .sign {
@@ -64,7 +83,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   margin: 10px;
   padding: 10px;
   display: flex;
-  background-color: #e8a8ad;
+  background-color: #091f43;
   box-shadow: 2px 5px 11px -5px #0000007d;
   border-radius: 5px;
   flex-flow: column;
@@ -109,13 +128,14 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   margin: 10px;
   padding: 10px;
   border-radius: 5px;
-  border: 1px solid #d1515a;
-  background-color: #d1515a;
-  box-shadow: 2px 5px 11px -5px #0000007d;
+  border: none;
+  background-color: #d1515a00;
+  box-shadow: none;
   max-width: 322px;
   align-self: center;
   width: 50%;
   cursor: pointer;
+  text-decoration: underline;
 }
 
 .userInfo {
@@ -128,14 +148,18 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
 
   box-shadow: 2px 5px 11px -5px #0000007d;
 }
+.hero h3 {
+  color: white;
+}
 .white {
-  background-color: white!important;
+  background-color: white !important;
 }
 .hero .check_box {
   margin: 10px auto;
   font-weight: bold;
   transform: scale(1.5);
   align-items: self-end;
+  color: white;
 }
 #profileManagement_isAdmin {
   vertical-align: -1px;
@@ -157,7 +181,9 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   padding: 20px 0;
   box-shadow: 2px 5px 11px -5px #0000007d;
   margin-bottom: 20px;
-
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 .sendPost_form {
   text-align: center;
@@ -170,15 +196,19 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   border: none;
   padding: 10px 30px 10px 10px;
   resize: none;
+  overflow-y: hidden;
 }
 .sendPost_message_icon {
   width: 30px;
   height: 24px;
- cursor: pointer;
- background-color: #d1515a;
- padding: 7px 5px;
- vertical-align: 0px;
- border-radius: 20px;
+  cursor: pointer;
+  background-color: #d1515a;
+  padding: 7px 5px;
+  vertical-align: 0px;
+  border-radius: 20px;
+}
+.sendPost_message_icon:hover {
+  opacity: 0.9;
 }
 .sendPost_attachment_label {
   position: relative;
@@ -189,7 +219,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   height: 18px;
   right: 10px;
   bottom: 10px;
-  cursor:pointer;
+  cursor: pointer;
 }
 .sendPost_attachment {
   position: absolute;
@@ -205,6 +235,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
 }
 .send_comment_message {
   max-width: 300px;
+  overflow-y: hidden;
 }
 .send_comment_submit {
   position: relative;
@@ -251,21 +282,19 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   border: 1px solid #e8a8ad;
   border-radius: 5px;
 }
-#messageToModify{
+#messageToModify {
   border: 2px solid #d1515a;
 }
 #messageToModifyIcon:focus,
-#messageToModifyIcon:active{
+#messageToModifyIcon:active {
   outline: 2px solid black;
-
 }
 .search {
-  
   display: flex;
   flex-flow: row;
   justify-content: flex-end;
   position: relative;
-  padding-bottom:10px
+  padding-bottom: 10px;
 }
 .search_input {
   width: 17px;
@@ -274,14 +303,14 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   border: 1px solid #d1515a;
   margin: 5px 10px 5px 0;
   padding: 8px;
-  
 }
 
 .search_input:hover {
   width: 40%;
   transition-duration: 400ms;
 }
-.search_input:focus, .search_input:active {
+.search_input:focus,
+.search_input:active {
   width: 40%;
 
   transition-duration: 400ms;
@@ -289,21 +318,19 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
 
 .search_icon {
   position: absolute;
-    bottom: 22px;
-    right: 19px;
-    width: 17px;
-    pointer-events: none;
-    background: white;
-
+  bottom: 22px;
+  right: 19px;
+  width: 17px;
+  pointer-events: none;
+  background: white;
 }
-.userNameWelcome{
+.userNameWelcome {
   align-self: center;
-    position: absolute;
-    left: 10px;
-    font-size:18px;
-    
+  position: absolute;
+  left: 10px;
+  font-size: 18px;
 }
-.userNameWelcome strong{
+.userNameWelcome strong {
   text-transform: capitalize;
 }
 
@@ -318,6 +345,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   box-shadow: 2px 5px 11px -5px #0000007d;
   padding: 20px 10px;
   max-width: 520px;
+  background-color: #fff;
 }
 
 .messageList_attachment {
@@ -342,7 +370,10 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  padding: 5px
+  padding: 5px;
+}
+#commentIcon:hover {
+  opacity: 0.5;
 }
 .messageList_comment {
   border-radius: 15px;
@@ -385,10 +416,10 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   position: absolute;
   right: 0px;
   top: 0px;
-  opacity: 0.5;
+  opacity: 1;
 }
 #delete_post_button:hover {
-  opacity: 1;
+  opacity: 0.5;
 }
 .editIcon {
   width: 15px;
@@ -396,14 +427,13 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   position: absolute;
   right: 1px;
   top: 20px;
-  opacity: 0.5;
+  opacity: 1;
   padding: 5px;
 }
 .editIcon:hover {
-  opacity: 1;
+  opacity: 0.5;
 }
 .alert_box {
- 
   display: flex;
   flex-flow: row;
   justify-content: center;
@@ -432,6 +462,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
 }
 .banner {
   border-bottom: 4px solid #d1515a;
+  background-color: #fff;
 }
 .header {
   display: flex;
@@ -443,7 +474,7 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
 .header_brand {
   display: flex;
   flex-flow: row;
-  cursor:pointer;
+  cursor: pointer;
 }
 
 .header_brand h1 {
@@ -469,22 +500,23 @@ img:active, .send_comment_submit_icon:focus, .send_comment_submit_icon:active {
   border: 1px solid #091f43;
   padding: 5px 9px;
   color: #091f43;
-cursor:pointer;
+  cursor: pointer;
   text-decoration: none;
   color: #091f43;
   margin: 5px;
 }
 .center {
   max-width: 520px;
-  margin:auto;
+  margin: auto;
 }
-.ontop{
+.ontop {
   position: absolute;
-    background: white;
-    height: 500%;
-    width: 100%;
-    z-index: 10;
-    background: rgb(255 255 255 / 79%);
+  background: white;
+  height: 500%;
+  width: 100%;
+  z-index: 10;
+  background: #fff;
+  top: 119px;
 }
 
 .App {
@@ -510,9 +542,13 @@ cursor:pointer;
 .App-link {
   color: #61dafb;
 }
-#deleteIcon_sendpost{
+#deleteIcon_sendpost {
   background: white;
   border-radius: 10px;
   padding: 5px;
 }
-
+.moderated{
+  color: grey;
+  font-style: italic;
+  margin: auto;
+}

@@ -66,6 +66,7 @@ const [userName, setuserName] = useState("");
               name="userName"
               id="userName"
               placeholder="Surnom"
+              required
               onChange={(e) => setuserName(e.target.value)}
               value={userName}
             />
@@ -77,6 +78,9 @@ const [userName, setuserName] = useState("");
               name="email"
               id="email"
               placeholder="Email"
+              pattern="^(.*)@(groupomania.org)$"
+              title="un email groupomania est obligatoire"
+              required
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
@@ -87,7 +91,10 @@ const [userName, setuserName] = useState("");
               type="password"
               name="password"
               id="password"
+              pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,12}"
+              title="Le mot de passe devrait contenir entre 8 et 12 charactères, un symbole et au moins une majuscule, une minuscule et un chiffre."
               placeholder="Mot de passe"
+              required
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />

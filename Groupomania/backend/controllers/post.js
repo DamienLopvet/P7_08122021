@@ -8,13 +8,65 @@ const { Op } = require("sequelize");
 
 /**
  * @swagger
- * /api/messages:
+ * /api/messages/send:
  *  post:
- *    description: Envoie d'un post par l'utilisateur
+ *    security:
+ *    - bearerAuth: []  
+ *    summary: Envoyer un post dans la base de donnée
+ *    consumes:
+ *        - multipart/form-data
+ *    produces:
+ *      -  application/json
+ *    parameters:
+ *      - name: message
+ *        in: formData
+ *        type: string
+ *      - name: attachmentUrl
+ *        in: formData
+ *        type: file
  *    responses:
- *      '200':
- *        description: Successfull response
- *
+ *      201:
+ *        description: Post créé
+ *        schema:
+ *          type: object
+ *          required:
+ *          - message 
+ *          - post
+ *          properties:
+ *            message:
+ *              type: string
+ *              default: post created!
+ *            post:
+ *              type: object
+ *              required:
+ *              - moderated
+ *              - id
+ *              - message
+ *              - userId
+ *              - updatedAt
+ *              - createdAt
+ *              properties:
+ *                moderated:
+ *                  type: boolean
+ *                  default: false
+ *                id:
+ *                  type: integer
+ *                message:
+ *                  type: string
+ *                userId:
+ *                  type: integer
+ *                updatedAt:
+ *                  type: string
+ *                  format: date-time
+ *                createdAt:
+ *                  type: string
+ *                  format: date-time
+ *      400:
+ *        description: Post introuvable ou mutlipartformData vide
+ *      401:
+ *        description: Operation non autorisée (token)
+ *      500:
+ *        description: Erreur Serveur    
  * 
  */
 createPost = (req, res, next) => {
@@ -44,17 +96,97 @@ createPost = (req, res, next) => {
  * @swagger
  * /api/messages:
  *  get:
- *    description: Envoie d'un post par l'utilisateur
+ *    security:
+ *    - bearerAuth: []  
+ *    summary: Recupère l'ensemble des posts présents dans la base de données, associés aus profils utlisateurs et aux commentaires
  *    responses:
- *      '200':
- *        description: Successfull response
- *
- * 
+ *      200:
+ *        description: Recevoir tous les posts avec profil utilisateur et commentaires
+ *        schema:
+ *          type: array
+ *          items: 
+ *            type: object
+ *            required:
+ *              - id
+ *              - userId
+ *              - message
+ *              - attachmentUrl
+ *              - moderated
+ *              - createdAt
+ *              - user
+ *              - comments
+ *            properties:
+ *              id:
+ *                type: integer
+ *              userId:
+ *                type: integer
+ *              message:
+ *                type: string
+ *              attachementUrl:
+ *                type: string
+ *                format: uri
+ *              moderated:
+ *                type: boolean
+ *                default: false
+ *              createdAt:
+ *                type: string
+ *                format: date-time
+ *              user:
+ *                type: object
+ *                required:
+ *                - id
+ *                - userName
+ *                properties:
+ *                  id:
+ *                    type: integer
+ *                  userName:
+ *                    type: string
+ *              comments:
+ *                type: array
+ *                items:
+ *                  type: object
+ *                  required:
+ *                    - id 
+ *                    - commentaire
+ *                    - createdAt
+ *                    - updatedAt
+ *                    - userId
+ *                    - postId
+ *                    - user
+ *                  properties:
+ *                    id:
+ *                      type: integer
+ *                    commentaire:
+ *                      type: string
+ *                    createdAt:
+ *                      type: string
+ *                      format: date-time
+ *                    updatedAt:
+ *                      type: string
+ *                      format: date-time
+ *                    userId:
+ *                      type: integer
+ *                    postId:
+ *                      type: integer
+ *                    user:
+ *                      type: object
+ *                      required:
+ *                      - id
+ *                      - userName
+ *                      properties:
+ *                        id:
+ *                          type: integer
+ *                        userName:
+ *                          type: string
+ *      401:
+ *        description: Operation non autorisée (token)
+ *      500:
+ *        description: Erreur serveur
  */
 getAllPosts = (req, res, next) => {
   Post.findAll({
     order: [["id", "DESC"]],
-    attributes: ["id", "userId", "message", "attachmentUrl", "createdAt"],
+    attributes: ["id", "userId", "message", "attachmentUrl","moderated", "createdAt"],
     include: [
       { model: User, attributes: ["id", "userName"] },
       {
@@ -70,13 +202,100 @@ getAllPosts = (req, res, next) => {
 /**
  * @swagger
  * /api/messages/{userName}:
- *  get:
- *    description: Envoie d'un post par l'utilisateur
- *    responses:
- *      '200':
- *        description: Successfull response
- *
- * 
+ *   get:
+ *     security:
+ *     - bearerAuth: []  
+ *     summary: Recuperer tous les posts d'un utilisateur
+ *     parameters:
+ *     - in: path
+ *       name: userName
+ *       required: true
+ *       type: string
+ *     responses:
+ *       200:
+ *         description: Reception de tous les posts avec profil utilisateur et commentaires
+ *         schema:
+ *           type: array
+ *           items: 
+ *             type: object
+ *             required:
+ *               - id
+ *               - userId
+ *               - message
+ *               - attachmentUrl
+ *               - moderated
+ *               - createdAt
+ *               - user
+ *               - comments
+ *             properties:
+ *               id:
+ *                 type: integer
+ *               userId:
+ *                 type: integer
+ *               message:
+ *                 type: string
+ *               attachementUrl:
+ *                 type: string
+ *                 format: uri
+ *               moderated:
+ *                 type: boolean
+ *                 default: false
+ *               createdAt:
+ *                 type: string
+ *                 format: date-time
+ *               user:
+ *                 type: object
+ *                 required:
+ *                 - id
+ *                 - userName
+ *                 properties:
+ *                   id:
+ *                     type: integer
+ *                   userName:
+ *                     type: string
+ *               comments:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   required:
+ *                     - id 
+ *                     - commentaire
+ *                     - createdAt
+ *                     - updatedAt
+ *                     - userId
+ *                     - postId
+ *                     - user
+ *                   properties:
+ *                     id:
+ *                       type: integer
+ *                     commentaire:
+ *                       type: string
+ *                     createdAt:
+ *                       type: string
+ *                       format: date-time
+ *                     updatedAt:
+ *                       type: string
+ *                       format: date-time
+ *                     userId:
+ *                       type: integer
+ *                     postId:
+ *                       type: integer
+ *                     user:
+ *                       type: object
+ *                       required:
+ *                       - id
+ *                       - userName
+ *                       properties:
+ *                         id:
+ *                           type: integer
+ *                         userName:
+ *                           type: string
+ *       400:
+ *         description: Utilisateur inconnu
+ *       401:
+ *         description: Operation non autorisée (token)
+ *       500:
+ *         description: Erreur serveur
  */
 getUserPosts = (req, res, next) => {
   User.findOne({
@@ -91,9 +310,15 @@ getUserPosts = (req, res, next) => {
       console.log(user);
       Post.findAll({
         order: [["id", "DESC"]],
-        attributes: ["userId", "id", "message", "attachmentUrl", "createdAt"],
+        attributes: ["userId", "id", "message", "attachmentUrl","moderated", "createdAt"],
         where: { userId: user.id },
-        include: [User, { model: Comment, include: User }],
+        include: [
+          { model: User, attributes: ["id", "userName"] },
+          {
+            model: Comment,
+            include: { model: User, attributes: ["id", "userName"] },
+          },
+        ],
       }).then((post) => res.status(200).json(post));
     })
     .catch((error) => {
@@ -104,13 +329,71 @@ getUserPosts = (req, res, next) => {
 /**
  * @swagger
  * /api/messages/{messageId}:
- *  put:
- *    description: Envoie d'un post par l'utilisateur
+ *  put: 
+ *    security:
+ *      - bearerAuth: []  
+ *    summary: Modifier un post
+ *    consumes:
+ *        - multipart/form-data
+ *    produces:
+ *      -  application/json
+ *    parameters:
+ *    - in: path
+ *      name: messageId
+ *      required: true
+ *      type: integer
+ *    - name: message
+ *      in: formData
+ *      type: string
+ *    - name: attachmentUrl
+ *      in: formData
+ *      type: file
  *    responses:
- *      '200':
- *        description: Successfull response
- *
- * 
+ *      201:
+ *        description: Post créé
+ *        schema:
+ *          type: object
+ *          required:
+ *          - message 
+ *          - post
+ *          properties:
+ *            message:
+ *              type: string
+ *            post:
+ *              type: object
+ *              required:
+ *              - id
+ *              - message
+ *              - attachmentUrl
+ *              - moderated
+ *              - updatedAt
+ *              - createdAt
+ *              - userId
+ *              properties:
+ *                id:
+ *                  type: integer
+ *                message:
+ *                  type: string
+ *                  default: post modified!
+ *                attachmentUrl:
+ *                  type: string
+ *                moderated:
+ *                  type: boolean
+ *                  default: false
+ *                updatedAt:
+ *                  type: string
+ *                  format: date-time
+ *                createdAt:
+ *                  type: string
+ *                  format: date-time
+ *                userId: 
+ *                  type: integer
+ *      400:
+ *        description: Post introuvable ou mutlipartformData vide
+ *      401:
+ *        description: Autorisation refusée
+ *      500:
+ *        description: Erreur Serveur
  */
 modifyPost = (req, res, next) => {
   Post.findOne({
@@ -127,7 +410,10 @@ modifyPost = (req, res, next) => {
         message = req.body.message.trim();
         post.id = req.params.messageId;
         post.message = message;
-        post.userId = req.token.userId;
+        post.userId = post.userId;
+        if(post.userId !== req.token.userId){
+         post.moderated = true;   
+        }
 
         if (req.file) {
           post.attachmentUrl = `${req.protocol}://${req.get(
@@ -151,14 +437,24 @@ modifyPost = (req, res, next) => {
 
 /**
  * @swagger
- * /api/messages/{messageId}:
- *  delete:
- *    description: Envoie d'un post par l'utilisateur
+ * /api/messages/delete/{messageId}:    
+ *  delete: 
+ *    security:
+ *      - bearerAuth: []  
+ *    summary: Supprimer un post
+ *    parameters:
+ *    - in: path
+ *      name: messageId
+ *      required: true
+ *      schema:
+ *        type: integer
  *    responses:
- *      '200':
- *        description: Successfull response
- *
- * 
+ *      200: 
+ *        description: Post supprimé
+ *      400: 
+ *        description: Post introuvable
+ *      401:
+ *        description: Operation non autorisée (token)
  */
 deletePost = (req, res, next) => {
   Post.findOne({

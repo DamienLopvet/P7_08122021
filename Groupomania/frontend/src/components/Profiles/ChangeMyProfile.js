@@ -4,7 +4,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../UserContext";
 
-function ChangeMyProfile({ setSuccessMessage, setUserInfo,setProfileForm }) {
+function ChangeMyProfile({ setSuccessMessage, setUserInfo, setProfileForm }) {
   const { user } = useContext(UserContext);
 
   const [userName, setUserName] = useState("");
@@ -43,12 +43,10 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo,setProfileForm }) {
         console.log(err.response.data);
 
         if (err.response.data.error) {
-          console.log(
-            err.response.data.error.errors[0].message.split("undefined")[1]
-          );
+          console.log(err.response.data.error.errors[0].message);
           setModifyMyProfilError(true);
           setModifyMyProfilErrorMessage(
-            err.response.data.error.errors[0].message.split("undefined")[1]
+            err.response.data.error.errors[0].message
           );
         } else if (err.response.data.message) {
           console.log(err.response.data.message);
@@ -86,6 +84,8 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo,setProfileForm }) {
             name="email"
             id="email"
             placeholder="nouvel Email"
+            pattern="^(.*)@(groupomania.org)$"
+            title="un email groupomania est obligatoire"
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
@@ -97,6 +97,8 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo,setProfileForm }) {
             type="password"
             name="password"
             id="password"
+            pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,12}"
+            title="Le mot de passe devrait contenir entre 8 et 12 charactères, un symbole et au moins une majuscule, une minuscule et un chiffre."
             placeholder="Nouveau mot de passe"
             onChange={(e) => setPassword(e.target.value)}
             value={password}
@@ -116,9 +118,13 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo,setProfileForm }) {
           className="btn  "
         />
       </form>
-      <button className="btn" id="abortChanges" onClick={() => setProfileForm(false)}>
-          Annuler
-        </button>
+      <button
+        className="btn"
+        id="abortChanges"
+        onClick={() => setProfileForm(false)}
+      >
+        Annuler
+      </button>
     </div>
   );
 }

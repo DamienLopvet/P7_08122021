@@ -61,7 +61,7 @@ function Banner({ userName, setUserName }) {
               id="signout"
               onClick={handleClick}
             >
-              Deconnexion
+              Déconnexion
             </button>{" "}
             {user.isAdmin && (
               <button

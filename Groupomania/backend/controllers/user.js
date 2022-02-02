@@ -2,21 +2,62 @@ const bcrypt = require("bcrypt");
 const User = require("../models/User");
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
-const cryptoJs = require("crypto-js");
 const password = require("../models/password");
 const { Op } = require("sequelize");
-
 
 /**
  * @swagger
  * /api/auth/signup:
- *  post:
- *    description: Inscription d'un utilisateur 
- *    responses:
- *      '201':
- *        description: Successfull response
- * 
+ *   post:
+ *     summary: Ajouter un utilisateur à la base de donnée
+ *     consumes:
+ *     - application/json
+ *     produces:
+ *     - application/json
+ *     parameters:
+ *     - in: body
+ *       name: user
+ *       description: Email de chez groupomania
+ *       schema:
+ *         type: object
+ *         required:
+ *         - email
+ *         - userName
+ *         - password
+ *         properties:
+ *           email:
+ *             type: string
+ *           userName:
+ *             type: string
+ *           password:
+ *             type: string
+ *     responses:
+ *       201:
+ *         description: user crée
+ *         schema:
+ *           type: object
+ *           required:
+ *           - userName
+ *           - userId
+ *           - isAdmin
+ *           - token
+ *           properties:
+ *             userName:
+ *               type: string
+ *             userId:
+ *               type: integer
+ *             isAdmin:
+ *               type: boolean
+ *             token:
+ *               type: string
+ *       400:
+ *         description: mauvaise requete, entrée non valide
+ *       401:
+ *         description: email ou userName déjà attribué
+ *       500:
+ *         description: Probleme avec le serveur
  */
+
 signup = async (req, res, next) => {
   // check email white-space, validity and encrypting
   let email = req.body.email.trim();
@@ -90,11 +131,48 @@ signup = async (req, res, next) => {
  * @swagger
  * /api/auth/signin:
  *  post:
- *    description: Inscription d'un utilisateur 
+ *    summary: logger un utilisateur
+ *    consumes:
+ *    - application/json
+ *    produces:
+ *    - application/json
+ *    parameters:
+ *    - in: body
+ *      name: user
+ *      description: Email de chez groupomania
+ *      schema:
+ *        type: object
+ *        required:
+ *        - email
+ *        - password
+ *        properties:
+ *          email:
+ *            type: string
+ *          password:
+ *            type: string
  *    responses:
- *      '201':
- *        description: Successfull response
- * 
+ *      201:
+ *        description: user crée
+ *        schema:
+ *          type: object
+ *          required:
+ *          - userName
+ *          - userId
+ *          - isAdmin
+ *          - token
+ *          properties:
+ *            userName:
+ *              type: string
+ *            userId:
+ *              type: integer
+ *            isAdmin:
+ *              type: boolean
+ *            token:
+ *              type: string
+ *      401:
+ *        description: Le mot de passe ne corespond pas, utilisateur non trouvé
+ *      500:
+ *        description: Probleme avec le serveur        
  */
 signin = (req, res, next) => {
   User.findOne({ where: { email: req.body.email } })
@@ -131,12 +209,41 @@ signin = (req, res, next) => {
 /**
  * @swagger
  * /api/auth/{userName}:
- *  get:
- *    description: Inscription d'un utilisateur 
- *    responses:
- *      '201':
- *        description: Successfull response
- * 
+ *   get:
+ *     security:
+ *     - bearerAuth: []  
+ *     summary: Trouver le profile d'un utilisateur
+ *     parameters:
+ *     - in: path
+ *       name: userName
+ *       required: true
+ *       type: string
+ *     responses:
+ *       200:
+ *         description: Utilisateur trouvé
+ *         schema:
+ *           type: object
+ *           required:
+ *           - userName
+ *           - userId
+ *           - isAdmin
+ *           - email
+ *           properties:
+ *             userName:
+ *               type: string
+ *             userId:
+ *               type: integer
+ *             isAdmin:
+ *               type: boolean
+ *             email:
+ *               type: string
+ *       400:
+ *         description: Mauvaise requete, entrée non valide
+ *       401:
+ *         description: email ou userName déjà attribué
+ *       500:
+ *         description: Probleme avec le serveur     
+ *  
  */
 getProfile = (req, res, next) => {
   User.findOne({
@@ -167,12 +274,60 @@ getProfile = (req, res, next) => {
 /**
  * @swagger
  * /api/auth/{userName}/userModify:
- *  put:
- *    description: Inscription d'un utilisateur 
- *    responses:
- *      '201':
- *        description: Successfull response
- * 
+ *   put:
+ *     security:
+ *     - bearerAuth: []  
+ *     summary: Modifier le profile d'un utilisateur 
+ *     consumes:
+ *     - application/json
+ *     produces:
+ *     - application/json
+ *     parameters:
+ *     - in: path
+ *       name: userName
+ *       required: true
+ *       type: string
+ *     - in: body
+ *       name: user
+ *       description: Email de chez groupomania
+ *       schema:
+ *         type: object
+ *         required:
+ *         - email
+ *         - userName
+ *         - password
+ *         properties:
+ *           email:
+ *             type: string
+ *           userName:
+ *             type: string
+ *           password:
+ *             type: string
+ *     responses:
+ *       201:
+ *         description: Utilisateur modifié
+ *         schema:
+ *           type: object
+ *           required:
+ *           - userName
+ *           - userId
+ *           - isAdmin
+ *           - email
+ *           properties:
+ *             userName:
+ *               type: string
+ *             userId:
+ *               type: integer
+ *             isAdmin:
+ *               type: boolean
+ *             email:
+ *               type: string
+ *       400:
+ *         description: Mauvaise requete, entrée non valide
+ *       401:
+ *         description: Email ou userName déjà attribué
+ *       500:
+ *         description: Probleme avec le serveur
  */
 modifyProfile = (req, res, next) => {
   User.findOne({
@@ -225,11 +380,11 @@ modifyProfile = (req, res, next) => {
             });
           }
         }
-        if(req.token.isAdmin && req.body.isAdmin === false){
-          user.isAdmin=false
-        } else if(req.token.isAdmin && req.body.isAdmin === true){
-          user.isAdmin=true
-        } 
+        if (req.token.isAdmin && req.body.isAdmin === false) {
+          user.isAdmin = false;
+        } else if (req.token.isAdmin && req.body.isAdmin === true) {
+          user.isAdmin = true;
+        }
 
         user
           .save()
@@ -251,13 +406,26 @@ modifyProfile = (req, res, next) => {
 
 /**
  * @swagger
- * /api/auth/{userId}:
+ * /api/auth/delete/{userId}:
  *  delete:
- *    description: Inscription d'un utilisateur 
+ *    security:
+ *        - bearerAuth: []  
+ *    summary: Supprimer un utilisateur
+ *    parameters:
+ *    - in: path
+ *      name: userId
+ *      required: true
+ *      type: integer
  *    responses:
- *      '20':
- *        description: Successfull response
- * 
+ *      201:
+ *        description: Utilisateur effacé de la base de donnée
+ *      400:
+ *        description: Mauvaise requete, utilisateur non trouvé dans la base de donnée
+ *      401:
+ *        description: Operation non autorisée (token)
+ *      500:
+ *        description: Probleme avec le serveur
+ *
  */
 deleteProfile = (req, res) => {
   User.findOne({

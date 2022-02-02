@@ -8,8 +8,6 @@ const cors = require("cors");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 
-
-
 //give access to files path
 const path = require("path");
 
@@ -23,6 +21,7 @@ const commentRoutes = require("./routes/comment");
 
 const swaggerOptions = {
   swaggerDefinition: {
+    openapi: "3.0.1",
     info: {
       title: "Groupomania API",
       description: "Specification de l'API Groupomania",
@@ -31,6 +30,16 @@ const swaggerOptions = {
         name: "Damien",
       },
       servers: ["http://localhost:3030"],
+    },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          name: "Authorization",
+          in: "header",
+        },
+      },
     },
   },
   apis: ["./controllers/*.js"],
@@ -67,7 +76,10 @@ app.use("/api/messages", commentRoutes);
 app.use("/api/auth", userRoutes);
 
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs , { explorer: true }));
-
+app.use(
+  "/api-docs",
+  swaggerUi.serve,
+  swaggerUi.setup(swaggerDocs, { explorer: true })
+);
 
 module.exports = app;

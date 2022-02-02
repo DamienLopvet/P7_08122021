@@ -27,6 +27,7 @@ const Post = ({
 
   const [showComment, setShowComment] = useState(false);
   const [showModifyPost, setShowModifyPost] = useState(false);
+  
   const resetShowModifyPost = () => {
     setShowModifyPost(false);
   };
@@ -62,6 +63,7 @@ const Post = ({
                 setModifyPostError={setModifyPostError}
               />
             )}
+            {post.moderated && <p className="moderated"><i><smaller>Message moderé par l'admin</smaller></i></p>}
           </>
         )}
       </div>

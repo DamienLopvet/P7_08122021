@@ -10,6 +10,10 @@ const Post = db.define(
     attachmentUrl: {
       type: DataTypes.STRING,
     },
+    moderated: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    }
   },
   {}
 );

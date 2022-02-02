@@ -19,7 +19,7 @@ function PostsList({ userName }) {
 
   useEffect(() => {
     if (user.isLogged) {
-    async function fetchData() {
+      async function fetchData() {
         axios({
           headers: {
             Authorization: "Bearer " + user.token,
@@ -38,7 +38,6 @@ function PostsList({ userName }) {
               setSearchAndAddPostError("");
             }
             setData(res.data);
-           
           })
           .catch((err) => {
             console.log(err.response.status);
@@ -54,7 +53,7 @@ function PostsList({ userName }) {
               setSearchAndAddPostErrorMessage(err.response.data.message);
             }
           });
-      };
+      }
       fetchData();
       if (userName.length === 0) {
         setSearchAndAddPostError(false);
@@ -71,8 +70,7 @@ function PostsList({ userName }) {
     }
   }, [user, userName]);
 
-  const handleAddPost = ( attachmentUrl, message, reset) => {
-    
+  const handleAddPost = (attachmentUrl, message, reset) => {
     const formData = new FormData();
     formData.append("attachmentUrl", attachmentUrl);
     formData.append("message", message);
@@ -81,7 +79,7 @@ function PostsList({ userName }) {
         Authorization: "Bearer " + user.token,
       },
       method: "post",
-      url: `${process.env.REACT_APP_API_URL}api/messages`,
+      url: `${process.env.REACT_APP_API_URL}api/messages/send`,
       withCredentials: false,
       data: formData,
     })
@@ -127,7 +125,7 @@ function PostsList({ userName }) {
         Authorization: "Bearer " + user.token,
       },
       method: "delete",
-      url: `${process.env.REACT_APP_API_URL}api/messages/${id}`,
+      url: `${process.env.REACT_APP_API_URL}api/messages/delete/${id}`,
       withCredentials: false,
     })
       .then((res) => {
@@ -165,14 +163,14 @@ function PostsList({ userName }) {
         console.log("post modified");
         let data_ = [...data];
         let post = data_.find((e) => e.id === postId);
-        post.attachmentUrl = res.data.post.attachmentUrl;
         post.message = res.data.post.message;
+        if(post.userId !== user.id){
+          post.moderated= true
+        }
         reset();
         resetShowModifyPost();
       })
       .catch((err) => {
-        console.log(err.response.status);
-        console.log(err.response.data);
         if (err.response.status === 500) {
           setModifyPostError(true);
           setModifyPostErrorMessage("Une erreur est survenue");
@@ -208,7 +206,6 @@ function PostsList({ userName }) {
       });
   };
   const handleAddComment = (postId, comment, reset) => {
-     
     axios({
       headers: {
         Authorization: "Bearer " + user.token,
@@ -239,9 +236,8 @@ function PostsList({ userName }) {
         } else if (err.response.status === 429) {
           setCommentError(true);
           setCommentErrorMessage(err.response.data.message);
-        } 
-        else {
-          setCommentError(  true);
+        } else {
+          setCommentError(true);
           setCommentErrorMessage(err.response.data.message);
         }
       });
