@@ -79,7 +79,7 @@ function Banner({ userName, setUserName }) {
       </header>
       {viewProfile && <MyProfile setViewProfile={setViewProfile}/>}
       {manageUserProfile && <div className="ontop" id="ontopAdmin"
-      onClick={showManagerProfileForm}><ManageUsersProfile /></div>}
+      onClick={showManagerProfileForm}><ManageUsersProfile manageUserProfile={manageUserProfile} setManageUserProfile={setManageUserProfile}/></div>}
       <Search userName={userName} setUserName={setUserName} />
     </div>
   );

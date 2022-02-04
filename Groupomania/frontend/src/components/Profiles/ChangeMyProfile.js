@@ -4,7 +4,7 @@ import axios from "axios";
 import { useContext, useState } from "react";
 import { UserContext } from "../UserContext";
 
-function ChangeMyProfile({ setSuccessMessage, setUserInfo, setProfileForm }) {
+function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
   const { user } = useContext(UserContext);
 
   const [userName, setUserName] = useState("");
@@ -121,7 +121,7 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setProfileForm }) {
       <button
         className="btn"
         id="abortChanges"
-        onClick={() => setProfileForm(false)}
+        onClick={() => setViewProfile(false)}
       >
         Annuler
       </button>

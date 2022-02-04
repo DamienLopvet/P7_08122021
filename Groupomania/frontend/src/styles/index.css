@@ -1,6 +1,6 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+  font-family: "Segoe UI", "Roboto", "Oxygen",
     "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -183,10 +183,15 @@ img:active,
   margin-bottom: 20px;
   position: sticky;
   top: 0;
-  z-index: 1;
 }
 .sendPost_form {
   text-align: center;
+}
+#postForm{
+  z-index: 3;
+}
+#modifyPostForm{
+  z-index: 1;
 }
 
 .sendPost_message {
@@ -318,11 +323,13 @@ img:active,
 
 .search_icon {
   position: absolute;
-  bottom: 22px;
-  right: 19px;
+  bottom: 16px;
+  right: 12px;
   width: 17px;
   pointer-events: none;
-  background: white;
+  background: #fff;
+  padding: 7px;
+  border-radius: 13px;
 }
 .userNameWelcome {
   align-self: center;
@@ -353,6 +360,15 @@ img:active,
   border-radius: 20px;
   margin-bottom: 10px;
   width: 100%;
+}
+.message_list_option{
+  position: relative;
+}
+#commentsLenght{
+  position: absolute;
+  bottom: 0px;
+  left: 30px;
+  font-size: 10px;
 }
 .messageList_message {
   background-color: #f2f2f2;
@@ -429,6 +445,7 @@ img:active,
   top: 20px;
   opacity: 1;
   padding: 5px;
+  z-index: 2;
 }
 .editIcon:hover {
   opacity: 0.5;
@@ -504,6 +521,7 @@ img:active,
   text-decoration: none;
   color: #091f43;
   margin: 5px;
+  z-index: 20;
 }
 .center {
   max-width: 520px;
@@ -516,7 +534,7 @@ img:active,
   width: 100%;
   z-index: 10;
   background: #fff;
-  top: 119px;
+  top: 60px;
 }
 
 .App {
@@ -551,4 +569,24 @@ img:active,
   color: grey;
   font-style: italic;
   margin: auto;
+}
+.profile_button{
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+}
+.mg-top{
+  margin-top: 70px;
+}
+.signInPassword{
+  position: relative;
+}
+.showPassword{
+  width: 13px;
+    height: 11px;
+    position: absolute;
+    right: 23px;
+    top: 23px;
+    cursor: pointer;
+    outline: none!important;
 }

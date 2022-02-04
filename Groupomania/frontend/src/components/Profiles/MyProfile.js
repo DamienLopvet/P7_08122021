@@ -23,6 +23,9 @@ function MyProfile({ setViewProfile }) {
     if (e.target.id === "ontopProfile") {
       setViewProfile(false);
     }
+    if (e.target.id === "annulerprofileview") {
+      setViewProfile(false);
+    }
   };
 
   useEffect(() => {
@@ -45,12 +48,12 @@ function MyProfile({ setViewProfile }) {
           console.log(err);
         });
     }
-    fetchData()
+    fetchData();
   }, [user.token, user.userName]);
 
   return (
     <div className="ontop" id="ontopProfile" onClick={handleShowProfile}>
-      <div className="center">
+      <div className="center mg-top">
         <h2 className="sign_title">Mon Profil</h2>
         <div>
           {info && (
@@ -72,21 +75,27 @@ function MyProfile({ setViewProfile }) {
               </ul>
             </>
           )}
-
-          
+          <div className="profile_button" >
             <button onClick={handleProfile} className="btn" id="changeProfile">
               Changer mes données
             </button>
-          
 
-        <DeleteMyProfile />
+            <DeleteMyProfile />
+            {!profileForm && <button
+              onClick={handleShowProfile}
+              className="btn"
+              id="annulerprofileview"
+            >
+              annuler
+            </button>}
+          </div>
         </div>
-
         {profileForm && (
           <ChangeMyProfile
             setSuccessMessage={setSuccessMessage}
             setUserInfo={setUserInfo}
             setProfileForm={setProfileForm}
+            setViewProfile={setViewProfile}
           />
         )}
       </div>

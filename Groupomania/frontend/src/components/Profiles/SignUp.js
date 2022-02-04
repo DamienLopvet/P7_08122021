@@ -1,9 +1,9 @@
 import React from "react";
-
 import "../../styles/index.css";
 import { useContext, useState } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
+import eye from "../../assets/eye.png";
 
 function SignUp() {
   const [isLogged, setIsLogged] = useState();
@@ -13,7 +13,16 @@ const [userName, setuserName] = useState("");
   const { setUser } = useContext(UserContext);
   const [Error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
+  const handleShowPassword = (e)=>{
+    e.preventDefault()
+    setShowPassword(true)
+  }
+  const handleHidePassword = (e)=>{
+    e.preventDefault()
+    setShowPassword(false)
+  }
   const handleSignUp = (e) => {
     e.preventDefault();
     axios({
@@ -77,7 +86,7 @@ const [userName, setuserName] = useState("");
               type="email"
               name="email"
               id="email"
-              placeholder="Email"
+              placeholder="Email@groupomania.org"
               pattern="^(.*)@(groupomania.org)$"
               title="un email groupomania est obligatoire"
               required
@@ -86,9 +95,11 @@ const [userName, setuserName] = useState("");
             />
           </label>
           <label htmlFor="password">
+          <div className="signInPassword">
+
             <input
               className="sign_field"
-              type="password"
+              type={showPassword ? "text" : "password"}
               name="password"
               id="password"
               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,12}"
@@ -98,6 +109,14 @@ const [userName, setuserName] = useState("");
               onChange={(e) => setPassword(e.target.value)}
               value={password}
             />
+            <img
+              src={eye}
+              alt="show password"
+              className="showPassword"
+              onMouseDown={handleShowPassword}
+              onMouseUp={handleHidePassword}
+
+            /></div>
           </label>
           {Error && <div className="alert">{errorMessage}</div>}
           <input type="submit" value="Créer un compte" className="btn  " />

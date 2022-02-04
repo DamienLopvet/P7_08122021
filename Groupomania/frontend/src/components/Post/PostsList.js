@@ -17,6 +17,7 @@ function PostsList({ userName }) {
   const [commentError, setCommentError] = useState("");
   const [commentErrorMessage, setCommentErrorMessage] = useState("");
 
+
   useEffect(() => {
     if (user.isLogged) {
       async function fetchData() {
@@ -54,22 +55,16 @@ function PostsList({ userName }) {
             }
           });
       }
-      fetchData();
+
       if (userName.length === 0) {
         setSearchAndAddPostError(false);
       }
-      //et id = setInterval(() => {
-      //  fetchData();
-      //}, 2000);
-      //fetchData();
-      //
-      //if(userName){
-      // clearInterval(id)
-      //
-      //}
+      
+fetchData()
+
     }
   }, [user, userName]);
-
+  
   const handleAddPost = (attachmentUrl, message, reset) => {
     const formData = new FormData();
     formData.append("attachmentUrl", attachmentUrl);
@@ -164,8 +159,8 @@ function PostsList({ userName }) {
         let data_ = [...data];
         let post = data_.find((e) => e.id === postId);
         post.message = res.data.post.message;
-        if(post.userId !== user.id){
-          post.moderated= true
+        if (post.userId !== user.id) {
+          post.moderated = true;
         }
         reset();
         resetShowModifyPost();

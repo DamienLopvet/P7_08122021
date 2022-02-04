@@ -5,7 +5,7 @@ import { UserContext } from "../UserContext";
 import "../../styles/index.css";
 import DeleteUserProfile from "./DeleteUserProfile";
 
-function ManageUsersProfile() {
+function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
   const { user } = useContext(UserContext);
   const [userProfileManagement, setUserProfileManagement] = useState(false);
   const [userName, setUserName] = useState("");
@@ -19,8 +19,15 @@ function ManageUsersProfile() {
 
   const handleManagement = (e) => {
     e.preventDefault();
-
-    setUserProfileManagement(!userProfileManagement);
+    if (e.target.id === "userProfileManagement") {
+      setUserProfileManagement(!userProfileManagement);
+    }
+    if (e.target.id === "annulerUserProfileManagement") {
+      setManageUserProfile(!manageUserProfile);
+    }
+    if (e.target.id === "abortManagementChanges") {
+      setManageUserProfile(!manageUserProfile);
+    }
   };
 
   useEffect(() => {
@@ -54,7 +61,7 @@ function ManageUsersProfile() {
   }, [userName, user.token]);
 
   return (
-    <div className="center">
+    <div className="center mg-top">
       <h2>Administration des utilisateurs</h2>
       <div className="hero">
         <h3>Trouver un utilisateur :</h3>
@@ -77,9 +84,7 @@ function ManageUsersProfile() {
         {info && (
           <>
             <ul className="userInfo white">
-              <h4>
-                {userInfo[0].userName}
-              </h4>
+              <h4>{userInfo[0].userName}</h4>
               <h4>Données actuelles de l'utilisateur :</h4>
 
               {userInfo.map((e) => (
@@ -101,7 +106,13 @@ function ManageUsersProfile() {
         >
           Changer les données utilisateur
         </button>
-
+        {!userProfileManagement && <button
+          className="btn"
+          id="annulerUserProfileManagement"
+          onClick={handleManagement}
+        >
+          annuler
+        </button>}
         {userProfileManagement && <ProfileManagementForm />}
       </div>
     </div>
@@ -223,8 +234,7 @@ function ManageUsersProfile() {
               id="profileManagement_isAdmin"
               onChange={(e) => setIsAdmin(e.target.checked)}
             />
-            Est un Admin ?
-            <div className="password error"></div>
+            Est un Admin ?<div className="password error"></div>
           </label>
           <label htmlFor="submit">
             <input

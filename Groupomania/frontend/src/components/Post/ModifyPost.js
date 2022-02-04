@@ -23,7 +23,7 @@ const ModifyPost = ({
 
   return (
     <div className="sendPost white">
-      <form action="" className="sendPost_form">
+      <form action="" className="sendPost_form" id='modifyPostForm'>
         <label htmlFor="message" className="sendPost_message_label">
           <textarea
           placeholder='modifier le texte du Post'

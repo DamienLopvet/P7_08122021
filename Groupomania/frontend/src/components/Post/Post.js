@@ -27,7 +27,7 @@ const Post = ({
 
   const [showComment, setShowComment] = useState(false);
   const [showModifyPost, setShowModifyPost] = useState(false);
-  
+ 
   const resetShowModifyPost = () => {
     setShowModifyPost(false);
   };
@@ -63,28 +63,69 @@ const Post = ({
                 setModifyPostError={setModifyPostError}
               />
             )}
-            {post.moderated && <p className="moderated"><i><smaller>Message moderé par l'admin</smaller></i></p>}
+            {post.moderated && <p className="moderated"><i>Message moderé par l'admin</i></p>}
           </>
         )}
       </div>
 
       <p className="messageList_userName">{post.user.userName}</p>
-      {post.attachmentUrl ? (
-        post.attachmentUrl.split(".", 3)[2] === "mp4" ? (
-          <div>
+      {post.attachmentUrl ? (<>
+        {post.attachmentUrl.split(".").pop() === "mp4" &&
+        <div>
             <video controls autoPlay muted className="messageList_attachment">
               <source src={post.attachmentUrl} type="video/mp4"></source>
             </video>
-          </div>
-        ) : (
+          </div>}
+          {post.attachmentUrl.split(".").pop() === "jpg" &&        
           <div>
             <img
               src={post.attachmentUrl}
               alt="post"
               className="messageList_attachment"
             ></img>
-          </div>
-        )
+          </div>}
+          {post.attachmentUrl.split(".").pop() === "png" &&        
+          <div>
+            <img
+              src={post.attachmentUrl}
+              alt="post"
+              className="messageList_attachment"
+            ></img>
+          </div>}
+          {post.attachmentUrl.split(".").pop() === "gif" &&        
+          <div>
+            <img
+              src={post.attachmentUrl}
+              alt="post"
+              className="messageList_attachment"
+            ></img>
+          </div>}
+          {post.attachmentUrl.split(".").pop() === "mp3" &&
+          <figure>
+          <figcaption>Audio</figcaption>
+          <audio
+              controls
+              src={post.attachmentUrl}>
+                  Your browser does not support the
+                  <code>audio</code> element.
+          </audio>
+      </figure>
+
+          }
+          {post.attachmentUrl.split(".").pop() === "m4a" &&
+          <figure>
+          <figcaption>Audio</figcaption>
+          <audio
+              controls
+              src={post.attachmentUrl}>
+                  Your browser does not support the
+                  <code>audio</code> element.
+          </audio>
+      </figure>
+
+          }
+        
+      </>
       ) : (
         ""
       )}
@@ -100,7 +141,7 @@ const Post = ({
           id="commentIcon"
           onClick={(e) => setShowComment(!showComment)}
           tabIndex="0"
-        ></input>
+        ></input>{!showComment && <p className="success" id="commentsLenght">{post.comments.length}</p>}
         {showComment && (
           <Comments
             comments={post.comments}
