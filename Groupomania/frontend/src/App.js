@@ -20,7 +20,7 @@ function App() {
       <UserContext.Provider value={{ user, setUser }}>
         <Banner userName={userName} setUserName={setUserName} />
         <Sign />
-        <PostsList userName={userName} />
+        {user.isLogged && <PostsList userName={userName} />}
       </UserContext.Provider>
     </>
   );

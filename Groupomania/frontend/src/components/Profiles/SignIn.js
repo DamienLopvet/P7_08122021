@@ -33,7 +33,6 @@ function SignIn() {
       },
     })
       .then((res) => {
-        console.log(res.data);
         let user_ = {};
         user_.userName = res.data.userName;
         user_.id = res.data.userId;
@@ -66,24 +65,24 @@ function SignIn() {
           onSubmit={handleSignIn}
           id="sign_in_form"
         >
-          <label htmlFor="email">
+          <label htmlFor="signInEmail">Email :
             <input
               className="sign_field"
               type="email"
-              name="email"
-              id="email"
+              name="signInEmail"
+              id="signInEmail"
               placeholder="Email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
-            <div className="email error"></div>
           </label>
-          <label htmlFor="password">
+          <label htmlFor="signInPassword">Password :
           <div className="signInPassword">
             <input
               className="sign_field"
               type={showPassword ? "text" : "password"}
-              name="password"
+              name="signInPassword"
+              id="signInPassword"
               placeholder="Mot de passe"
               onChange={(e) => setPassword(e.target.value)}
               value={password}/>

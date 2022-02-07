@@ -4,7 +4,7 @@ const rateLimiter = require("express-rate-limit");
 
 userLogLimiter = new rateLimiter({
   windowMs: 60 * 60 * 1000, // 60 minutes
-  max: 25, // limit each IP to 5 requests per windowMs
+  max: 250, // limit each IP to 5 requests per windowMs
   message:
   {message :"Vous avez essayé de vous connecter un trop grand nombre de fois, veuillez attendre 1 heures pour tenter un nouvel essai."},
 

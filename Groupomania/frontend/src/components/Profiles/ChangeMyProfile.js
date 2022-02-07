@@ -65,7 +65,7 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
         onSubmit={handleProfileForm}
         id="sign_up_form"
       >
-        <label htmlFor="userName">
+        <label htmlFor="userName">Surnom
           <input
             className="sign_field"
             type="text"
@@ -77,7 +77,7 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
           />
           <div className="userName error"></div>
         </label>
-        <label htmlFor="email">
+        <label htmlFor="email">Email
           <input
             className="sign_field"
             type="email"
@@ -91,7 +91,7 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
           />
           <div className="email error"></div>
         </label>
-        <label htmlFor="password">
+        <label htmlFor="password">Password
           <input
             className="sign_field"
             type="password"

@@ -32,6 +32,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
 
   useEffect(() => {
     setSuccessMessage("");
+    if(userName){
     async function FindUser() {
       axios({
         headers: {
@@ -42,7 +43,6 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
         withCredentials: false,
       })
         .then((res) => {
-          console.log(res.data);
           setUserInfo(res.data);
           setInfo(true);
           setFindUserError(false);
@@ -57,22 +57,23 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
           }
         });
     }
-    FindUser();
+    FindUser();}
   }, [userName, user.token]);
 
   return (
     <div className="center mg-top">
       <h2>Administration des utilisateurs</h2>
       <div className="hero">
-        <h3>Trouver un utilisateur :</h3>
+      <label htmlFor="ManageSearchUser">  <h3>Trouver un utilisateur :</h3>
         <input
           autoComplete="off"
           className="sign_field"
           type="text"
-          name="userName"
+          name="ManageSearchUser"
+          id="ManageSearchUser"
           placeholder="UserName de l'utlisateur"
           onChange={(e) => setUserName(e.target.value)}
-        />
+        /></label>
         {findUserError && (
           <div
             className="alert_box alert"
@@ -184,7 +185,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
           id="profileManagement_form"
           autoComplete="off"
         >
-          <label htmlFor="profileManagement_userName">
+          <label htmlFor="profileManagement_userName">Surnom
             <input
               autoComplete="off"
               className="sign_field"
@@ -197,7 +198,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
             />
             <div className="userName error"></div>
           </label>
-          <label htmlFor="profileManagement_email">
+          <label htmlFor="profileManagement_email">Email
             <input
               autoComplete="off"
               className="sign_field"
@@ -212,7 +213,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
             />
             <div className="email error"></div>
           </label>
-          <label htmlFor="profileManagement_password">
+          <label htmlFor="profileManagement_password">Password
             <input
               autoComplete="off"
               className="sign_field"
@@ -236,9 +237,11 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
             />
             Est un Admin ?<div className="password error"></div>
           </label>
-          <label htmlFor="submit">
+          <label htmlFor="manageSubmit">
             <input
               type="submit"
+              name="manageSubmit"
+              id="manageSubmit"
               value="Confirmer les nouvelles données"
               className="btn  "
             />

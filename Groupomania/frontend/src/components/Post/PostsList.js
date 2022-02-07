@@ -1,9 +1,31 @@
 import "../../styles/index.css";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useRef } from "react";
 import axios from "axios";
 import { UserContext } from "../UserContext";
 import Post from "./Post";
 import PostForm from "./PostForm";
+
+//Construir l'interval qui rafraichit la liste des posts
+
+function useInterval(callback, delay) {
+  const savedCallback = useRef();
+
+  // Remember the latest function.
+  useEffect(() => {
+    savedCallback.current = callback;
+  }, [callback]);
+
+  // Set up the interval.
+  useEffect(() => {
+    function tick() {
+      savedCallback.current();
+    }
+    if (delay !== null) {
+      let id = setInterval(tick, delay);
+      return () => clearInterval(id);
+    }
+  }, [delay]);
+}
 
 function PostsList({ userName }) {
   const [data, setData] = useState([]);
@@ -17,54 +39,57 @@ function PostsList({ userName }) {
   const [commentError, setCommentError] = useState("");
   const [commentErrorMessage, setCommentErrorMessage] = useState("");
 
+//Établir l'interval qui rafraichit la liste des posts
+
+  useInterval(() => {
+    if (userName === "") fetchData(userName);
+  }, 60000);
 
   useEffect(() => {
-    if (user.isLogged) {
-      async function fetchData() {
-        axios({
-          headers: {
-            Authorization: "Bearer " + user.token,
-          },
-          method: "get",
-          url: `${process.env.REACT_APP_API_URL}api/messages/${userName}`,
-          withCredentials: false,
-          data: {},
-        })
-          .then((res) => {
-            console.log(res.data);
-            if (res.data.length === 0) {
-              setNoPost(true);
-            } else {
-              setNoPost(false);
-              setSearchAndAddPostError("");
-            }
-            setData(res.data);
-          })
-          .catch((err) => {
-            console.log(err.response.status);
-            console.log(err.response.data); // 401
-            if (err.response.status === 401) {
-              setSearchAndAddPostError(true);
-              setSearchAndAddPostErrorMessage(err.response.data.message);
-            } else if (err.response.status === 400) {
-              setSearchAndAddPostError(true);
-              setSearchAndAddPostErrorMessage(err.response.data.message);
-            } else if (err.response.status === 429) {
-              setSearchAndAddPostError(true);
-              setSearchAndAddPostErrorMessage(err.response.data.message);
-            }
-          });
-      }
-
-      if (userName.length === 0) {
-        setSearchAndAddPostError(false);
-      }
-      
-fetchData()
-
+    if (userName.length === 0) {
+      setSearchAndAddPostError(false);
     }
-  }, [user, userName]);
-  
+    fetchData(userName);
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userName]);
+
+  // Gerer l'affichage des posts et les resultats de la reherche de post par UserName
+  const fetchData = async (research) => {
+    axios({
+      headers: {
+        Authorization: "Bearer " + user.token,
+      },
+      method: "get",
+      url: `${process.env.REACT_APP_API_URL}api/messages/${research}`,
+      withCredentials: false,
+      data: {},
+    })
+      .then((res) => {
+        if (res.data.length === 0) {
+          setNoPost(true);
+        } else {
+          setNoPost(false);
+          setSearchAndAddPostError("");
+        }
+        setData(res.data);
+      })
+      .catch((err) => {
+        console.log(err.response.status);
+        console.log(err.response.data); // 401
+        if (err.response.status === 401) {
+          setSearchAndAddPostError(true);
+          setSearchAndAddPostErrorMessage(err.response.data.message);
+        } else if (err.response.status === 400) {
+          setSearchAndAddPostError(true);
+          setSearchAndAddPostErrorMessage(err.response.data.message);
+        } else if (err.response.status === 429) {
+          setSearchAndAddPostError(true);
+          setSearchAndAddPostErrorMessage(err.response.data.message);
+        }
+      });
+  };
+
+  //Ajouter un post
   const handleAddPost = (attachmentUrl, message, reset) => {
     const formData = new FormData();
     formData.append("attachmentUrl", attachmentUrl);
@@ -79,7 +104,6 @@ fetchData()
       data: formData,
     })
       .then((res) => {
-        console.log(res);
         console.log("post sended");
         let data_ = [...data];
         data_.unshift({
@@ -110,6 +134,8 @@ fetchData()
         }
       });
   };
+
+  //Supprimer un post
   const handleDeletePost = (id) => {
     //const confirm = window.confirm(
     //  "etes vous sûr de vouloir supprimer ce Post?"
@@ -124,7 +150,6 @@ fetchData()
       withCredentials: false,
     })
       .then((res) => {
-        console.log(res);
         let data_ = [...data].filter((e) => e.id !== id);
         setData(data_);
         console.log("post Deleted");
@@ -134,6 +159,8 @@ fetchData()
       });
     // }
   };
+
+  //mofifier un post
   const handleModifyPost = (
     postId,
     newAttachmentUrl,
@@ -154,7 +181,6 @@ fetchData()
       data: formData,
     })
       .then((res) => {
-        console.log(res);
         console.log("post modified");
         let data_ = [...data];
         let post = data_.find((e) => e.id === postId);
@@ -175,31 +201,8 @@ fetchData()
         }
       });
   };
-  const handleDeleteComment = (id, postId) => {
-    // const confirm = window.confirm(
-    //   "etes vous sûr de vouloir supprimer ce commentaire?"
-    // );
-    axios({
-      headers: {
-        Authorization: "Bearer " + user.token,
-      },
-      method: "delete",
-      url: `${process.env.REACT_APP_API_URL}api/messages/comment/${id}`,
-      withCredentials: false,
-    })
-      .then((res) => {
-        console.log(res);
 
-        console.log("comment Deleted");
-        let data_ = [...data];
-        let post = data_.find((e) => e.id === postId);
-        post.comments = post.comments.filter((k) => k.id !== id);
-        setData(data_);
-      })
-      .catch((err) => {
-        console.log(err);
-      });
-  };
+ //Ajouter un commentaire
   const handleAddComment = (postId, comment, reset) => {
     axios({
       headers: {
@@ -211,7 +214,6 @@ fetchData()
       data: { comment },
     })
       .then((res) => {
-        console.log("comment sended");
         let data_ = [...data];
         let post = data_.find((e) => e.id === postId);
         post.comments.push({
@@ -235,6 +237,31 @@ fetchData()
           setCommentError(true);
           setCommentErrorMessage(err.response.data.message);
         }
+      });
+  };
+
+   //Supprimer un commentaire
+   const handleDeleteComment = (id, postId) => {
+    // const confirm = window.confirm(
+    //   "etes vous sûr de vouloir supprimer ce commentaire?"
+    // );
+    axios({
+      headers: {
+        Authorization: "Bearer " + user.token,
+      },
+      method: "delete",
+      url: `${process.env.REACT_APP_API_URL}api/messages/comment/${id}`,
+      withCredentials: false,
+    })
+      .then((res) => {
+        console.log("comment Deleted");
+        let data_ = [...data];
+        let post = data_.find((e) => e.id === postId);
+        post.comments = post.comments.filter((k) => k.id !== id);
+        setData(data_);
+      })
+      .catch((err) => {
+        console.log(err);
       });
   };
 

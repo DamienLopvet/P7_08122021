@@ -76,7 +76,7 @@ const Post = ({
               <source src={post.attachmentUrl} type="video/mp4"></source>
             </video>
           </div>}
-          {post.attachmentUrl.split(".").pop() === "jpg" &&        
+         {["gif", "png", "jpg", "webp"].includes(post.attachmentUrl.split(".").pop()) &&        
           <div>
             <img
               src={post.attachmentUrl}
@@ -84,22 +84,7 @@ const Post = ({
               className="messageList_attachment"
             ></img>
           </div>}
-          {post.attachmentUrl.split(".").pop() === "png" &&        
-          <div>
-            <img
-              src={post.attachmentUrl}
-              alt="post"
-              className="messageList_attachment"
-            ></img>
-          </div>}
-          {post.attachmentUrl.split(".").pop() === "gif" &&        
-          <div>
-            <img
-              src={post.attachmentUrl}
-              alt="post"
-              className="messageList_attachment"
-            ></img>
-          </div>}
+         
           {post.attachmentUrl.split(".").pop() === "mp3" &&
           <figure>
           <figcaption>Audio</figcaption>

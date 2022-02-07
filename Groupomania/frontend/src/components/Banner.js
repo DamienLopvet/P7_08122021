@@ -39,7 +39,7 @@ function Banner({ userName, setUserName }) {
   return (
     <div className="banner">
       <header className="header">
-        <div className="header_brand" onClick={e => window.location.reload()}>
+        <div className="header_brand">
           <img src={logo} className="header_logo" alt="logo Groupomania" />
           <h1>Groupomania</h1>
         </div>

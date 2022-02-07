@@ -68,24 +68,24 @@ const [userName, setuserName] = useState("");
           onSubmit={handleSignUp}
           id="Profile_form"
         >
-          <label htmlFor="userName">
+          <label htmlFor="signUpUserName">Surnom :
             <input
               className="sign_field"
               type="text"
-              name="userName"
-              id="userName"
+              name="signUpUserName"
+              id="signUpUserName"
               placeholder="Surnom"
               required
               onChange={(e) => setuserName(e.target.value)}
               value={userName}
             />
           </label>
-          <label htmlFor="email">
+          <label htmlFor="signUpEmail">Email :
             <input
               className="sign_field"
               type="email"
-              name="email"
-              id="email"
+              name="signUpEmail"
+              id="signUpEmail"
               placeholder="Email@groupomania.org"
               pattern="^(.*)@(groupomania.org)$"
               title="un email groupomania est obligatoire"
@@ -94,14 +94,14 @@ const [userName, setuserName] = useState("");
               value={email}
             />
           </label>
-          <label htmlFor="password">
+          <label htmlFor="signUpPassword">Password :
           <div className="signInPassword">
 
             <input
               className="sign_field"
               type={showPassword ? "text" : "password"}
-              name="password"
-              id="password"
+              name="signUpPassword"
+              id="signUpPassword"
               pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.])[A-Za-z\d@$!%*?&.]{8,12}"
               title="Le mot de passe devrait contenir entre 8 et 12 charactères, un symbole et au moins une majuscule, une minuscule et un chiffre."
               placeholder="Mot de passe"

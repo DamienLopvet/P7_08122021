@@ -10,6 +10,8 @@ const MIME_TYPES = {
   "video/mp4": "mp4",
   "audio/mpeg": "mp3",
   "audio/x-m4a": "m4a",
+  "audio/aac": "aac",
+ 
 };
 
 //create and config the storage path

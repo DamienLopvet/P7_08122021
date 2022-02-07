@@ -40,7 +40,6 @@ function MyProfile({ setViewProfile }) {
         data: {},
       })
         .then((res) => {
-          console.log(res.data);
           setInfo(true);
           setUserInfo(res.data);
         })

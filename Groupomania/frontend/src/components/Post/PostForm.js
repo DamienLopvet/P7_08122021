@@ -47,6 +47,8 @@ function PostForm({ onAdd }) {
           <input
             type="image"
             src={sendMessage}
+            name="submit"
+            id="submit"
             className="sendPost_message_icon"
             alt="send message icon"
             onClick={(e) => {e.preventDefault(); onAdd(attachmentUrl, message, reset)}}
