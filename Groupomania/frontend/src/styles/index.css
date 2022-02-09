@@ -612,3 +612,8 @@ img:active,
   flex-flow: column;
   align-items: center;
 }
+#successManageProfile{
+  background-color: white;
+  padding: 5px;
+
+}

@@ -26,7 +26,7 @@ const ModifyPost = ({
       <form action="" className="sendPost_form" id='modifyPostForm'>
         <label htmlFor="message" className="sendPost_message_label">
           <textarea
-          placeholder='modifier le texte du Post'
+          placeholder='Modifier le texte du Post'
             className="sendPost_message"
             type="text"
             name="message"

@@ -71,7 +71,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
           type="text"
           name="ManageSearchUser"
           id="ManageSearchUser"
-          placeholder="UserName de l'utlisateur"
+          placeholder="Surnom de l'utilisateur"
           onChange={(e) => setUserName(e.target.value)}
         /></label>
         {findUserError && (
@@ -112,7 +112,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
           id="annulerUserProfileManagement"
           onClick={handleManagement}
         >
-          annuler
+          Annuler
         </button>}
         {userProfileManagement && <ProfileManagementForm />}
       </div>
@@ -178,7 +178,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
             <p>{userManagementError}</p>
           </div>
         )}
-        {successMessage && <p className="success center">{successMessage}</p>}
+        {successMessage && <p className="success center" id="successManageProfile">{successMessage}</p>}
         <form
           action=""
           onSubmit={handleUserProfile}
@@ -193,7 +193,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
               type="text"
               name="userName"
               id="profileManagement_userName"
-              placeholder="Nouveau nom d'utlisateur"
+              placeholder="Nouveau surnom"
               onChange={(e) => setuserName(e.target.value)}
               value={userName}
             />
@@ -209,11 +209,10 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
               id="profileManagement_email"
               pattern="^(.*)@(groupomania.org)$"
               title="un email groupomania est obligatoire"
-              placeholder="nouvel Email"
+              placeholder="Nouvel email"
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
-            <div className="email error"></div>
           </div>
           <div>
             <input

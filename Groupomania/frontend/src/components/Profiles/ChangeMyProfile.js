@@ -85,7 +85,7 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
             type="email"
             name="email"
             id="email"
-            placeholder="nouvel Email"
+            placeholder="Nouvel email"
             pattern="^(.*)@(groupomania.org)$"
             title="un email groupomania est obligatoire"
             onChange={(e) => setEmail(e.target.value)}

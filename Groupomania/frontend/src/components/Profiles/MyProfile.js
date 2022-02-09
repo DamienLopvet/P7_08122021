@@ -62,10 +62,10 @@ function MyProfile({ setViewProfile }) {
                 {userInfo.map((e) => (
                   <li key={"userInfo" + e.userId}>
                     <p id="my_userName">Surnom : {e.userName}</p>
-                    <p id="my_email">email : {e.email}</p>
+                    <p id="my_email">Email : {e.email}</p>
                     {user.isAdmin && (
                       <p className="success">
-                        vous avez un profil Administrateur
+                        Vous avez un profil Administrateur
                       </p>
                     )}
                     <p className="success">{successMessage}</p>
@@ -85,7 +85,7 @@ function MyProfile({ setViewProfile }) {
               className="btn"
               id="annulerprofileview"
             >
-              annuler
+              Annuler
             </button>}
           </div>
         </div>
