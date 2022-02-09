@@ -18,8 +18,8 @@ function PostForm({ onAdd }) {
   return user.isLogged ? (
     <div className="sendPost" id="postForm">
       <form action="" className="sendPost_form">
-        <label htmlFor="message" className="sendPost_message_label">
-          <textarea
+       <textarea
+            aria-label="message"
             className="sendPost_message"
             type="text"
             name="message"
@@ -28,7 +28,7 @@ function PostForm({ onAdd }) {
             onChange={(e) => setMessage(e.target.value)}
             value={message}
           />
-        </label>
+        
         <label htmlFor="attachmentUrl" className="sendPost_attachment_label">
           <img
             src={trombone}
@@ -43,7 +43,6 @@ function PostForm({ onAdd }) {
             onChange={(e) =>setAttachmentUrl(e.target.files[0])}
           />
         </label>
-        <label htmlFor="submit">
           <input
             type="image"
             src={sendMessage}
@@ -53,7 +52,6 @@ function PostForm({ onAdd }) {
             alt="send message icon"
             onClick={(e) => {e.preventDefault(); onAdd(attachmentUrl, message, reset)}}
           />
-        </label>
       </form>
       {attachmentUrl && (
         <div className="attachment">

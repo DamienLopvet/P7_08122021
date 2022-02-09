@@ -65,8 +65,8 @@ function SignIn() {
           onSubmit={handleSignIn}
           id="sign_in_form"
         >
-          <label htmlFor="signInEmail">Email :
             <input
+              aria-label="email"
               className="sign_field"
               type="email"
               name="signInEmail"
@@ -75,10 +75,9 @@ function SignIn() {
               onChange={(e) => setEmail(e.target.value)}
               value={email}
             />
-          </label>
-          <label htmlFor="signInPassword">Password :
           <div className="signInPassword">
             <input
+            aria-label="Password"
               className="sign_field"
               type={showPassword ? "text" : "password"}
               name="signInPassword"
@@ -93,7 +92,6 @@ function SignIn() {
               onMouseDown={handleShowPassword}
               onMouseUp={handleHidePassword}
             /></div>
-          </label>
           
           {signInError && <div className="alert">{signInErrorMessage}</div>}
 

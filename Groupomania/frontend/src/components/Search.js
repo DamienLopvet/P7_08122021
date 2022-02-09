@@ -19,6 +19,7 @@ function Search({ userName, setUserName }) {
         <>
         <div className='userNameWelcome'>Bonjour <strong>{user.userName}</strong>,</div>
           <input
+          aria-label='recherche'
             id="search_input"
             className="search_input"
             placeholder='Filtrer par utilisateur'

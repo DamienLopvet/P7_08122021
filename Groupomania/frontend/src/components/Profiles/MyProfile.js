@@ -61,7 +61,7 @@ function MyProfile({ setViewProfile }) {
                 <h3>Mes données actuelles :</h3>
                 {userInfo.map((e) => (
                   <li key={"userInfo" + e.userId}>
-                    <p id="my_userName">userName : {e.userName}</p>
+                    <p id="my_userName">Surnom : {e.userName}</p>
                     <p id="my_email">email : {e.email}</p>
                     {user.isAdmin && (
                       <p className="success">

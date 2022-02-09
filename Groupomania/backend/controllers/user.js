@@ -10,27 +10,23 @@ const { Op } = require("sequelize");
  * /api/auth/signup:
  *   post:
  *     summary: Ajouter un utilisateur à la base de donnée
- *     consumes:
- *     - application/json
- *     produces:
- *     - application/json
- *     parameters:
- *     - in: body
- *       name: user
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - userName
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               userName:
+ *                 type: string
+ *               password:
+ *                 type: string
  *       description: Email de chez groupomania
- *       schema:
- *         type: object
- *         required:
- *         - email
- *         - userName
- *         - password
- *         properties:
- *           email:
- *             type: string
- *           userName:
- *             type: string
- *           password:
- *             type: string
  *     responses:
  *       201:
  *         description: user crée
@@ -132,27 +128,23 @@ signup = async (req, res, next) => {
  * /api/auth/signin:
  *  post:
  *    summary: logger un utilisateur
- *    consumes:
- *    - application/json
- *    produces:
- *    - application/json
- *    parameters:
- *    - in: body
- *      name: user
- *      description: Email de chez groupomania
- *      schema:
- *        type: object
- *        required:
- *        - email
- *        - password
- *        properties:
- *          email:
- *            type: string
- *          password:
- *            type: string
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *              - email
+ *              - password
+ *            properties:
+ *              email:
+ *                type: string
+ *              password:
+ *                type: string
+ *      description: données de connexion
  *    responses:
  *      201:
- *        description: user crée
+ *        description: user loggé
  *        schema:
  *          type: object
  *          required:
@@ -172,7 +164,7 @@ signup = async (req, res, next) => {
  *      401:
  *        description: Le mot de passe ne corespond pas, utilisateur non trouvé
  *      500:
- *        description: Probleme avec le serveur        
+ *            description: Probleme avec le serveur        
  */
 signin = (req, res, next) => {
   User.findOne({ where: { email: req.body.email } })
@@ -278,31 +270,28 @@ getProfile = (req, res, next) => {
  *     security:
  *     - bearerAuth: []  
  *     summary: Modifier le profile d'un utilisateur 
- *     consumes:
- *     - application/json
- *     produces:
- *     - application/json
  *     parameters:
- *     - in: path
- *       name: userName
- *       required: true
- *       type: string
- *     - in: body
- *       name: user
- *       description: Email de chez groupomania
- *       schema:
- *         type: object
- *         required:
- *         - email
- *         - userName
- *         - password
- *         properties:
- *           email:
- *             type: string
- *           userName:
- *             type: string
- *           password:
- *             type: string
+ *       - in: path
+ *         name: userName
+ *         required: true
+ *         type: string
+ *     requestBody:
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *             - email
+ *             - userName
+ *             - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *               userName:
+ *                 type: string
+ *               password:
+ *                 type: string
+ *       description: Modifier les données d'un utilisateur
  *     responses:
  *       201:
  *         description: Utilisateur modifié
@@ -326,6 +315,8 @@ getProfile = (req, res, next) => {
  *         description: Mauvaise requete, entrée non valide
  *       401:
  *         description: Email ou userName déjà attribué
+ *       429:
+ *         description: Trop de requêtes ont été faites, le serveur est bloqué
  *       500:
  *         description: Probleme avec le serveur
  */
@@ -406,16 +397,17 @@ modifyProfile = (req, res, next) => {
 
 /**
  * @swagger
- * /api/auth/delete/{userId}:
+ * /api/auth/{userId}:
  *  delete:
- *    security:
- *        - bearerAuth: []  
  *    summary: Supprimer un utilisateur
+ *    security:
+ *      - bearerAuth: []  
  *    parameters:
- *    - in: path
- *      name: userId
- *      required: true
- *      type: integer
+ *      - in: path
+ *        name: userId
+ *        required: true
+ *        schema:
+ *          type: integer
  *    responses:
  *      201:
  *        description: Utilisateur effacé de la base de donnée
@@ -423,6 +415,8 @@ modifyProfile = (req, res, next) => {
  *        description: Mauvaise requete, utilisateur non trouvé dans la base de donnée
  *      401:
  *        description: Operation non autorisée (token)
+ *      429:
+ *        description: Trop de requêtes ont été faites, le serveur est bloqué
  *      500:
  *        description: Probleme avec le serveur
  *

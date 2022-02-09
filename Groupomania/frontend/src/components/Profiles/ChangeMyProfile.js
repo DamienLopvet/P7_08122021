@@ -65,8 +65,9 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
         onSubmit={handleProfileForm}
         id="sign_up_form"
       >
-        <label htmlFor="userName">Surnom
+        <div>
           <input
+          aria-label="srunom"
             className="sign_field"
             type="text"
             name="userName"
@@ -76,9 +77,10 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
             value={userName}
           />
           <div className="userName error"></div>
-        </label>
-        <label htmlFor="email">Email
+        </div>
+        <div>
           <input
+            aria-label="email"
             className="sign_field"
             type="email"
             name="email"
@@ -89,10 +91,10 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
             onChange={(e) => setEmail(e.target.value)}
             value={email}
           />
-          <div className="email error"></div>
-        </label>
-        <label htmlFor="password">Password
+        </div>
+        <div>
           <input
+          aria-label="password"
             className="sign_field"
             type="password"
             name="password"
@@ -103,7 +105,7 @@ function ChangeMyProfile({ setSuccessMessage, setUserInfo, setViewProfile }) {
             onChange={(e) => setPassword(e.target.value)}
             value={password}
           />
-        </label>
+        </div>
         {modifyMyProfilError && (
           <div
             className="alert_box alert"

@@ -73,7 +73,13 @@ img:active,
 .sign {
   display: flex;
   flex-flow: column;
-  justify-content: center;
+  align-items: center;
+}
+#sign_in_form{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
 }
 .sign_title {
   margin-left: 10px;
@@ -105,7 +111,6 @@ img:active,
   margin-top: 10px;
   margin-bottom: 10px;
   padding: 10px;
-  width: 80%;
   text-align: center;
   max-width: 300px;
 }
@@ -163,6 +168,9 @@ img:active,
 }
 #profileManagement_isAdmin {
   vertical-align: -1px;
+  margin-right: 10px!important;
+  width: 13px!important;
+
 }
 .alert {
   font-weight: 700;
@@ -592,10 +600,15 @@ img:active,
     cursor: pointer;
     outline: none!important;
 }
-label{
-  color: white;
-}
+
 #ontopAdmin input{
   margin-left: auto;
   margin-right: auto;
+  width: 220px;
+}
+
+#profileManagement_form{
+  display: flex;
+  flex-flow: column;
+  align-items: center;
 }

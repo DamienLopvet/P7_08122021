@@ -7,24 +7,21 @@ const Comment = require("../models/Comment");
  *    security:
  *      - bearerAuth: []
  *    summary: Envoyer un commentaire dans la base de donnée
- *    consumes:
- *    - application/json
- *    produces:
- *    - application/json
  *    parameters:
- *    - in: path
- *      name: postId
- *      required: true
- *      type: integer
- *    - in: body
- *      name: commentaire
- *      schema:
- *        type: object
- *        required:
- *        - comment
- *        properties:
- *          comment:
- *            type: string
+ *      - in: path
+ *        name: postId
+ *        required: true
+ *        type: integer
+ *    requestBody:
+ *      content:
+ *        application/json:
+ *          schema:
+ *            type: object
+ *            required:
+ *            - comment
+ *            properties:
+ *              comment:
+ *                type: string
  *    responses:
  *      201:
  *        description: Commentaire créé

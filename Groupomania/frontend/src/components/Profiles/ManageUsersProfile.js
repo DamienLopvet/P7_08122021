@@ -185,8 +185,9 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
           id="profileManagement_form"
           autoComplete="off"
         >
-          <label htmlFor="profileManagement_userName">Surnom
+          <div>
             <input
+              aria-label="Surnom"
               autoComplete="off"
               className="sign_field"
               type="text"
@@ -197,9 +198,10 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
               value={userName}
             />
             <div className="userName error"></div>
-          </label>
-          <label htmlFor="profileManagement_email">Email
+          </div>
+          <div>
             <input
+            aria-label="email"
               autoComplete="off"
               className="sign_field"
               type="email"
@@ -212,9 +214,10 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
               value={email}
             />
             <div className="email error"></div>
-          </label>
-          <label htmlFor="profileManagement_password">Password
+          </div>
+          <div>
             <input
+            aria-label="password"
               autoComplete="off"
               className="sign_field"
               type="password"
@@ -227,17 +230,18 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
               value={password}
             />
             <div className="password error"></div>
-          </label>
-          <label htmlFor="profileManagement_isAdmin" className="check_box">
+          </div>
+          <div className="check_box">
             <input
+            aria-label="est un admin?"
               type="checkbox"
               name="isAdmin"
               id="profileManagement_isAdmin"
               onChange={(e) => setIsAdmin(e.target.checked)}
             />
             Est un Admin ?<div className="password error"></div>
-          </label>
-          <label htmlFor="manageSubmit">
+          </div>
+          <div>
             <input
               type="submit"
               name="manageSubmit"
@@ -245,7 +249,7 @@ function ManageUsersProfile({ manageUserProfile, setManageUserProfile }) {
               value="Confirmer les nouvelles données"
               className="btn  "
             />
-          </label>
+          </div>
         </form>
         <DeleteUserProfile
           userIdToManage={userIdToManage}
